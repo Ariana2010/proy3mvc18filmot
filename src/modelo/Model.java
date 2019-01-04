@@ -19,7 +19,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -32,14 +31,14 @@ public class Model {
     
     public void loadFiles() {
     
-    List<Pelicula> tmpPelis = new ArrayList<>();
-    List<Director> tmpDirectores = new ArrayList<>();;
-    List<Actor> tmpActores = new ArrayList<>();;
     //comprobar si existen los ficheros .bin correspondientes
     Path rutaFileBinFilms = crearRuta(fmt.getNameOfFolder(),fmt.getNameOfFileFilms(),fmt.getExtensiones()[0]);
     Path rutaFileBinDirectors = crearRuta(fmt.getNameOfFolder(),fmt.getNameOfFileDirector(),fmt.getExtensiones()[0]);
     Path rutaFileBinActors = crearRuta(fmt.getNameOfFolder(),fmt.getNameOfFileActors(),fmt.getExtensiones()[0]);
-    //*************** PELICULAS ********************//
+    //===============================================//    
+    //**************** PELICULAS ********************//
+    //===============================================//
+    List<Pelicula> tmpPelis = new ArrayList<>();
     //** Si existe leer fichero .bin
     if (Files.exists(rutaFileBinFilms)){  //Si existe leer fichero .bin
         //System.err.println("El archivo " + rutaFileBinFilms + "existe."); 
@@ -47,13 +46,14 @@ public class Model {
         try {
         FileInputStream fis = new FileInputStream(rutaFileBinFilms.toFile());
         BufferedInputStream bis = new BufferedInputStream(fis);
-        ObjectInputStream ois = new ObjectInputStream(bis);
-        tmpPelis = (ArrayList<Pelicula>) ois.readObject();
-        ois.close();
+            try (ObjectInputStream ois = new ObjectInputStream(bis)) {
+                tmpPelis = (ArrayList<Pelicula>) ois.readObject();
+            }
         } catch (IOException | ClassNotFoundException ex) {
             System.out.println("No fue posible leer el archivo: "+rutaFileBinFilms);
             System.err.println(ex.toString());
         }
+        System.out.println("Peliculas.bin : ");
         for(Pelicula p: tmpPelis){
             System.out.println(p);
         }
@@ -93,21 +93,27 @@ public class Model {
         //fmt.setPeliculas(tmpPelis); //añadiendolo a la colección.
         }
     }
-    fmt.setPeliculas(tmpPelis); 
+    fmt.setPeliculas(tmpPelis);
+    //===============================================//
     //*************** DIRECTORES ********************//
+    //===============================================//
+    List<Director> tmpDirectores = new ArrayList<>();
     if (Files.exists(rutaFileBinDirectors)){
                // System.err.println("El archivo " + rutaFileBinDirectors + " existe."); 
         try {
         FileInputStream fis = new FileInputStream(rutaFileBinDirectors.toFile());
         BufferedInputStream bis = new BufferedInputStream(fis);
-        ObjectInputStream ois = new ObjectInputStream(bis);
-        tmpDirectores = ((List<Director>) ois.readObject());
-        ois.close();
+            try (ObjectInputStream ois = new ObjectInputStream(bis)) {
+                tmpDirectores = (List<Director>) ois.readObject();
+            }
         } catch (IOException | ClassNotFoundException ex) {
             System.out.println("No fue posible leer el archivo"+rutaFileBinDirectors);
             System.out.println(ex.toString());
         }
-                
+        System.out.println("Directores.bin :");        
+        for(Director x:tmpDirectores){
+            System.out.println(x);
+        }
     }else{
         Path rutaFileTxt = crearRuta(fmt.getNameOfFolder(),fmt.getNameOfFileDirector(),fmt.getExtensiones()[1]);
         //1A.Comprobar que el fichero existe.
@@ -126,22 +132,26 @@ public class Model {
             archDir = null;
         }
         if(archDir != null && !archDir.isEmpty()){ //sin archDir no es null y no está vacío.
-        //3B.inicializar la collección temporal
-        //tmpDirectores = new ArrayList<>();
-        Director x;
-        for (String lineaD: archDir){ 
-            if(lineaD.isEmpty()==false){
-                //System.out.println(lineaD);
-                x = Director.instanceDirectorFromString_facMet(lineaD);
-                if (x!=null)
-                    tmpDirectores.add(x);
+            //3B.inicializar la collección temporal
+            //tmpDirectores = new ArrayList<>();
+            Director x;
+            for (String lineaD: archDir){ 
+                if(lineaD.isEmpty()==false){
+  /**///                  System.out.println(lineaD);
+                    x = Director.instanceDirectorFromString_facMet(lineaD);
+                    if (x!=null) 
+                        tmpDirectores.add(x);
+/**///                    System.out.println("director x :" +x);
+                }
             }
-        }
         //fmt.setDirectores(tmpDirectores); //añadiendolo a la colección.
         }
     }
     fmt.setDirectores(tmpDirectores);
-    //*************** ACTORES ********************//
+    //===============================================//
+    //***************** ACTORES *********************//
+    //===============================================//
+    List<Actor> tmpActores = new ArrayList<>();
     if (Files.exists(rutaFileBinActors)){
                //     System.err.println("El archivo " + rutaFileBinActors + " existe."); 
         try {
@@ -153,6 +163,10 @@ public class Model {
         } catch (IOException | ClassNotFoundException ex) {
             System.out.println("No fue posible leer el archivo"+rutaFileBinActors);
             System.out.println(ex.toString());
+        }
+        System.out.println("Actores.bin :");        
+        for (Actor x : tmpActores) {
+            System.out.println(x);
         }
     }else{
         Path rutaFileTxt = crearRuta(fmt.getNameOfFolder(),fmt.getNameOfFileActors(),fmt.getExtensiones()[1]);
@@ -173,16 +187,17 @@ public class Model {
         }
         if(archAct != null && !archAct.isEmpty()){ //sin archAct no es null y no está vacío.
         //3B.inicializar la collección temporal
-        tmpActores = new ArrayList<>();
-        Actor x;
-        for (String lineA: archAct){  
-            if(lineA.isEmpty()==false){
-                //System.out.println(lineA);
-                x = Actor.instanceActorFromString_facMet(lineA);
-                if (x!=null)
-                    tmpActores.add(x);
+            //tmpActores = new ArrayList<>();
+            Actor x;
+            for (String lineA: archAct){  
+                if(lineA.isEmpty()==false){
+/**///                System.out.println(lineA);
+                    x = Actor.instanceActorFromString_facMet(lineA);
+                    if (x!=null)
+                        tmpActores.add(x);
+/**///                   System.out.println("actor x :" +x);
+                }
             }
-        }
         //fmt.setActores(tmpActores); //añadiendolo a la colección.
         }
     }
@@ -256,38 +271,55 @@ public class Model {
         tmpPelis = (List) fmt.getPeliculas();
         tmpPelis.add(x);
         fmt.setPeliculas(tmpPelis);
-        
+        //hasta ahi la pelicula se ha agregado al modelo; queda:
+        //1. actualizar la lista de peliculas del director.
+        //2. actualizar la lista de peliculas del actor.
+        String tPeli = nuevo[0];    //Campo 1 de la clase Pelicula.
+        String listaDir = nuevo[4];  //Campo 5 de la clase Pelicula.
+        String listaAct = nuevo[8];  //Campo 9 de la clase Pelicula.
         List<Director> dir = (List)fmt.getDirectores();
-        String[] directores = nuevo[4].split(Director.getSEPARADOR_COLL());
+        String[] directores = listaDir.split(Director.getSEPARADOR_COLL());
         for(String name : directores){
             boolean exist = false;
             for (Director d : dir){
                 if(d.getNombre().equalsIgnoreCase(name)){
+                    d.addPelisDir(tPeli);
                     exist = true;
+                    System.out.println(d);
                 }
             }
-            if(!exist){
-                Director cnd = new Director(name);
+            if(!exist){ //el director no existe asi que no se ha agregado la pelicula a ninguna lista.
+                Director cnd = new Director(name,tPeli);
                 dir.add(cnd);
+                System.out.println(cnd);
             }
         }
         fmt.setDirectores(dir);
+        //Se ha realizado 1.actualizar lista peliculas director.
+        //List<Actor> act = (List)fmt.getActores();
         
-        List<Actor> act = (List)fmt.getActores();
-        String[] actores = nuevo[9].split(Director.getSEPARADOR_COLL());
+        String[] actores = listaAct.split(Director.getSEPARADOR_COLL());
         for(String name : actores){
             boolean exist = false;
-            for (Actor d : act){
+            //for (Actor d : act){
+            for (Actor d : fmt.getActores()){
                 if(d.getNombre().equalsIgnoreCase(name)){
+                    d.addPelisAct(tPeli);
                     exist = true;
+                    System.out.println(d);
                 }
             }
             if(!exist){
-                Actor cna = new Actor(name);
-                act.add(cna);
+                Actor cna = new Actor(name,tPeli);
+                try{
+                fmt.getActores().add(cna);}catch(UnsupportedOperationException e){
+                    System.err.println("ERROR: "+e);
+                }
+                System.out.println(cna);
             }
         }
-        fmt.setActores(act);
+        //Se ha realizado 2.actualizar lista peliculas actor.
+        //fmt.setActores(act);
         
     }
 
@@ -303,11 +335,7 @@ public class Model {
         }
         return p;
     }
-
-    public void guardarDirectores(String[] nuevo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-        
+   
     //**************************************************************************
     
     public String[] getCAMPOS_PELICULA() {
@@ -321,5 +349,23 @@ public class Model {
     public String[] getCAMPOS_ACTOR() {
         return fmt.getCAMPOS_ACTOR();
     }
+
+   /* public void actualizarColeccionTitulosDirector(String _film, String dir, boolean b) {
+        Collection<Director> tmpDir = fmt.getDirectores();
+        boolean set=false;
+        for( Director d : tmpDir){
+            if (d.getNombre().equals(dir)){
+                d.addPelisDir(_film); //agregar ese titulo a la coleccion de pelis del director
+                set = true;
+            }else{//el director no esta en la coleccion de directores,crear un objeto Director y agregarlo
+                Director newDir = new Director(dir,_film);
+                tmpDir.add(newDir);
+                set = true;
+            }
+        }
+    }*/
+  
+    
+    
     
 }//End Class.

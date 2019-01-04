@@ -90,32 +90,39 @@ public class Director implements Serializable{
      * @return 
      */
     public static Director instanceDirectorFromString_facMet(String lineaD ){
-        Director unDir = new Director();
-        String[] separado = lineaD.split(Director.getSEPARADOR_CAMPOS());
         
-        if(separado.length < Director.NUMERO_CAMPOS){
+        String[] separado = lineaD.split(Director.getSEPARADOR_CAMPOS());
+        Director unDir;
+        if(separado[0].isEmpty()){
             return null;
+            //Retorna null si la cadena del nombre es vacía.
+        }else{
+            unDir = new Director();
+            unDir.setNombre(separado[0]);
+            if(separado.length < Director.NUMERO_CAMPOS){
+                //return unDir; //con los valores por defecto, pero con nombre.
+                System.err.println("CLASS DIRECTOR: ERROR: Hay menos campos de los esperados");
+            }else{
+                unDir.setNombre(separado[0]);
+                if(!separado[1].isEmpty()){
+                    unDir.setFechaNac(LocalDate.parse(separado[1]));
+                } //de lo contrario conserva la fecha por defecto.
+                if(!separado[2].isEmpty()) {
+                    unDir.setNacionalidad(separado[2]); 
+                }
+                if(!separado[3].isEmpty()) {
+                    unDir.setOcupacion(separado[3]); 
+                }
+                /* Atributo número 5 es una coleccion de nombres de películas: */
+                if(!separado[4].isEmpty()) {
+                    String[] t=separado[4].split(Director.getSEPARADOR_COLL());
+                    List<String> man = Arrays.asList(t);
+                    unDir.setPelisDir(man);
+                }
+            }
         }
-        if(!separado[0].isEmpty()){
-            return null;
-        }
-        unDir.setNombre(separado[0]);
-        if(!separado[1].isEmpty()){
-            unDir.setFechaNac(LocalDate.parse(separado[1]));
-        } //de lo contrario conserva la fecha por defecto.
-        if(!separado[2].isEmpty()) {
-            unDir.setNacionalidad(separado[2]); 
-        }
-        if(!separado[3].isEmpty()) {
-            unDir.setOcupacion(separado[3]); 
-        }
-        /* Atributo número 5 es una coleccion de nombres de películas: */
-        if(!separado[3].isEmpty()) {
-            String[] t=separado[4].split(Director.getSEPARADOR_COLL());
-            List<String> man = Arrays.asList(t);
-            unDir.setPelisDir(man);
-        }
-        return unDir;
+        System.out.println("FactoriaDirector "+unDir);
+    return unDir;
     }
     
     /**
@@ -145,12 +152,12 @@ public class Director implements Serializable{
         this._pelisDir = Arrays.asList("Sin títulos conocidos");
     }
     
-    public Director(String name) {
+    public Director(String name,String peli) {
         this.nombre = name;
         this.fechaNac = LocalDate.parse(Director.DEFAULT_DATE);
         this.nacionalidad = "Desconocida";
         this.ocupacion = "Director de cine";
-        this._pelisDir = Arrays.asList("Sin títulos conocidos");
+        this._pelisDir = Arrays.asList(peli);
     }
     /**
      * 
@@ -186,6 +193,24 @@ public class Director implements Serializable{
             return nm.substring(0, nm.length()-1);
         }
     }
+
+    void addPelisDir(String _film) {
+        //agregar a la coleccion de peliculas del director este título sino esta.
+        boolean exist=false;
+        for(String pd: this._pelisDir){
+            if(pd.equalsIgnoreCase(_film)){
+                exist=true;
+            }
+        }if(!exist){
+            this._pelisDir.add(_film);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Director{" + "nombre=" + nombre + ", fechaNac=" + fechaNac + ", nacionalidad=" + nacionalidad + ", ocupacion=" + ocupacion + ", _pelisDir=" + _pelisDir + '}';
+    }
+    
     
     
 }

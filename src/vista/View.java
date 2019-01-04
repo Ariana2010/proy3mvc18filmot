@@ -186,30 +186,34 @@ public class View {
                     + "datos numéricos.\n Intentelo de nuevo.\n Excepcion : " + e.getMessage());
         }
         if (done) {
-            System.out.println("Se ha añadido "+nuevo[0]+" a la colección");
+            System.out.println("Se ha añadido \""+nuevo[0]+"\" a la colección");
         }else{
-            System.out.println("No se ha podido añadir "+nuevo[0]+" a la colección");
+            System.out.println("No se ha podido añadir \""+nuevo[0]+"\" a la colección");
         }
     }
     
     private String leerColl(String d) {
         StringBuilder coll = new StringBuilder();
-        System.out.println(d+": ");
+        String c;
+        System.out.println("Cuando termine de introducir los valores para "
+                + "este campo pulse \"x\" y luego \"intro\", para continuar "
+                + "con el siguiente campo.");
         do{
-            coll.append(sc.nextLine());
-            coll.append("\t");
-            //sc.nextLine();
-        }while (this.preguntarSiSalirOrContinuar("otro " +d+ "?, "));
-        coll.substring(0, coll.length()-1);
-        System.out.println(coll+"*\n");
-        return coll.toString();
+            System.out.printf("%s: ",d);
+            c = sc.nextLine();
+            if (!c.equals("x")) {
+                coll.append(c);
+                coll.append("\t");
+            }
+        }while (!c.equals("x"));
+        return (coll.substring(0, coll.length()-1));
     }
 
     private void consultar(String consulta) {
         String cad;
         switch (consulta){
             case "pelicula": //pedir por teclado el título de la película
-                System.out.println("Por favor teclea en nombre de "+consulta);
+                System.out.println("Por favor teclee el nombre de la "+consulta);
                 cad = sc.nextLine();
                 //recuperar sus datos
                 String[] pelicula;
@@ -326,7 +330,12 @@ public class View {
 
 //********************************************************************
 //-------------------------- MÁS MÉTODOS -----------------------------
-
+/**
+ * Recibe dos arrays de string, uno con los datos de la película y otro
+ * la cabecera para los datos.
+ * @param datos
+ * @param title 
+ */
     private void showDatos(String[] datos,String[] title) {
         int index = 0;
         System.out.println("");

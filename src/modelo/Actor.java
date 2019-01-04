@@ -31,7 +31,7 @@ public class Actor implements Serializable{
     private final static String DEFAULT_DATE = "2018-12-31";
     private final static int NUMERO_CAMPOS = 5;
 
-    
+       
     public String getNombre() {
         return nombre;
     }
@@ -95,6 +95,7 @@ public class Actor implements Serializable{
         this.debut = 0;
         this._pelisAct = Arrays.asList("Sin títulos conocidos");
     }
+
     /**
      * Constructor con paramétros.
      * @param nombre
@@ -111,12 +112,12 @@ public class Actor implements Serializable{
         this._pelisAct = _pelisAct;
     }
     
-    public Actor(String name) {
-        this.nombre = name;
+    public Actor(String _name,String _tPeli) {
+        this.nombre = _name;
         this.fechaNac = LocalDate.parse(Actor.DEFAULT_DATE);
         this.nacionalidad = "Desconocida";
         this.debut = 0;
-        this._pelisAct = Arrays.asList("Sin títulos conocidos");
+        this._pelisAct = Arrays.asList(_tPeli);
     }
     /**
      * Método factoría para usar con el archivo de texto.
@@ -124,16 +125,20 @@ public class Actor implements Serializable{
      * @return 
      */
     public static Actor instanceActorFromString_facMet(String lineaA ){
-        Actor unActor = new Actor();
-        String[] separado = lineaA.split(Director.getSEPARADOR_CAMPOS());
+        Actor unActor ;
+        String[] separado = lineaA.split(Director.getSEPARADOR_CAMPOS(),5);
         
         if(separado.length < Actor.NUMERO_CAMPOS){
-            return null;
+            //return null;
+            System.err.println("CLASS ACTOR: ERROR: Hay menos campos de los esperados");
         }
-        if(!separado[0].isEmpty()){
+        if(separado[0].isEmpty()){
             return null;
+            //System.out.println("nombre actor :"+separado[0]);
+        }else{
+            unActor = new Actor();
+            unActor.setNombre(separado[0]);
         }
-        unActor.setNombre(separado[0]);
         if(!separado[1].isEmpty()){
             unActor.setFechaNac(LocalDate.parse(separado[1]));
         } //de lo contrario conserva la fecha por defecto.
@@ -149,7 +154,8 @@ public class Actor implements Serializable{
             List<String> man = Arrays.asList(t);
             unActor.setPelisAct(man);
         }
-        return unActor;
+        System.out.println("factoriaActor "+unActor);
+    return unActor;
     }
     
     /**
@@ -187,4 +193,25 @@ public class Actor implements Serializable{
             return nm.substring(0, nm.length()-1);
         }
     }
-}
+    
+        void addPelisAct(String _film) {
+        //agregar a la coleccion de peliculas del director este título sino esta.
+        boolean exist=false;
+        for(String pd: this._pelisAct){
+            if(pd.equalsIgnoreCase(_film)){
+                exist=true;
+            }
+        }if(!exist){
+            this._pelisAct.add(_film);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Actor{" + "nombre=" + nombre + ", fechaNac=" + fechaNac + '}';
+    }
+        
+    
+        
+        
+}//End Class

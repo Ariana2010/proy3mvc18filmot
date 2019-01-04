@@ -6,6 +6,7 @@
 package controlador;
 
 import modelo.Model;
+import modelo.Pelicula;
 
 /**
  *
@@ -28,7 +29,12 @@ public class Controller {
         boolean res;
         try {
             m.guardarPeliculaEnModelo(nuevo);
+            //Actualizar_Director(nombresDirectoresnuevo[4], tituloPeliculanuevo[0]);
+            //this.actualizarColeccionTitulosDirector(nuevo[0],nuevo[4]);
+            //Actualizar_Actor(nuevo[8]);
+            
            // m.guardarDirectores(nuevo);
+           // m.guardarActores(nuevo);
             res = true;
         }catch (NumberFormatException  exc ){
             res = false;
@@ -68,6 +74,13 @@ public class Controller {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    /*
+    private void actualizarColeccionTitulosDirector(String _film,String _directores){
+        String[] directores = _directores.split(Pelicula.SEPARADOR_COLL);
+        for(String dir:directores){
+            m.actualizarColeccionTitulosDirector(_film,dir,true);
+        }
+    }*/
 
-
+    
 }

@@ -30,8 +30,8 @@ public class Pelicula implements Serializable {
 /*11*/    String genero;
 /*12*/    String sinopsis;
 //DELIMITADORES    
-private final static String SEPARADOR_CAMPOS = "#";
-private final static String SEPARADOR_COLL = "\t";
+public final static String SEPARADOR_CAMPOS = "#";
+public final static String SEPARADOR_COLL = "\t";
 private final String SEPARADOR_COMA = ",";
 
 private final int NUM_CAMPOS = 12;
