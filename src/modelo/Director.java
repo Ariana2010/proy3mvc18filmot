@@ -23,14 +23,15 @@ public class Director implements Serializable{
     /*3*/ private String nacionalidad;
     /*4*/ private String ocupacion;
     /*5*/ private Collection<String> _pelisDir;
+    //Valor por defecto para la fecha.
+    private final static String DEFAULT_DATE = "2018-12-31";
     //DELIMITADORES
     private final static String SEPARADOR_CAMPOS = "#";
     private final static String SEPARADOR_COLL = "\t";
     private final String SEPARADOR_COMA = ",";
-    
-    private final static String DEFAULT_DATE = "2018-12-31";
+    //OTROS
     static final int NUMERO_CAMPOS = 5;
-
+    public static final int NUMCAMPOSMODIF = 3;
     
 
     public String getNombre() {
@@ -208,7 +209,7 @@ public class Director implements Serializable{
 
     @Override
     public String toString() {
-        return "Director{" + "nombre=" + nombre + ", fechaNac=" + fechaNac + ", nacionalidad=" + nacionalidad + ", ocupacion=" + ocupacion + ", _pelisDir=" + _pelisDir + '}';
+        return "Director{" + "Nombre=" + nombre + ", Fecha nacimiento=" + fechaNac + ", Nacionalidad=" + nacionalidad + ", Ocupacion=" + ocupacion + ", \nPeliculas que ha dirigido=" + _pelisDir + '}';
     }
     
     

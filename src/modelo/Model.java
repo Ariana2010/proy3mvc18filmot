@@ -29,6 +29,20 @@ public class Model {
 
     Filmoteca fmt = new Filmoteca();
     
+    //**************************************************************************
+    public String[] getCAMPOS_PELICULA() {
+        return fmt.getCAMPOS_PELICULA();
+    }
+
+    public String[] getCAMPOS_DIRECTOR() {
+        return fmt.getCAMPOS_DIRECTOR();
+    }
+
+    public String[] getCAMPOS_ACTOR() {
+        return fmt.getCAMPOS_ACTOR();
+    }
+    
+    //**************************************************************************
     public void loadFiles() {
     
     //comprobar si existen los ficheros .bin correspondientes
@@ -263,6 +277,7 @@ public class Model {
             return p;
     }
 
+    //**************************************************************************
     public void guardarPeliculaEnModelo (String[] nuevo) 
             throws NumberFormatException  {
         List<Pelicula> tmpPelis;
@@ -323,6 +338,86 @@ public class Model {
         
     }
 
+    public void actualizarDatosPelicula(String _titulo,String[] _modificar,String[] _nuevoValor){
+        Pelicula peli = fmt.getUnaPeliculaPorTitulo(_titulo);
+ /**/       System.out.println(peli);
+        int i=0;
+        for(String modif:_modificar){
+            if(modif.equalsIgnoreCase("año")){
+                if(!_nuevoValor[i].isEmpty()){
+                    peli.setYear(Integer.parseInt(_nuevoValor[i]));
+                    i++;
+                }
+                else
+                    i++;
+            }
+            if(modif.equalsIgnoreCase("duración")){
+                if(!_nuevoValor[i].isEmpty()){
+                    peli.setDuracion(Integer.parseInt(_nuevoValor[i]));
+                    i++;
+                }
+                else
+                    i++;
+            }
+            if(modif.equalsIgnoreCase("país")){
+                if(!_nuevoValor[i].isEmpty()){
+                    peli.setPais(_nuevoValor[i]);
+                    i++;
+                }
+                else
+                    i++;
+            }
+            if(modif.equalsIgnoreCase("guión")){
+                if(!_nuevoValor[i].isEmpty()){
+                    peli.setGuion(_nuevoValor[i]);
+                }
+                else
+                    i++;
+            }
+            if(modif.equalsIgnoreCase("música")) {
+                if(_nuevoValor[i].isEmpty()){i++;}
+                else{
+                    peli.setMusica(_nuevoValor[i]);
+                    i++;
+                }
+            }
+            if(modif.equalsIgnoreCase("fotografía")) {
+                if(_nuevoValor[i].isEmpty()){i++;}
+                else{
+                    peli.setFotografia(_nuevoValor[i]);
+                    i++;
+                }
+            }
+            if(modif.equalsIgnoreCase("productora")) {
+                if(_nuevoValor[i].isEmpty()){i++;}
+                else{
+                    peli.setProductora(_nuevoValor[i]);
+                    i++;
+                }
+            }
+            if(modif.equalsIgnoreCase("género")) {
+                if(_nuevoValor[i].isEmpty()){i++;}
+                else{
+                    peli.setGenero(_nuevoValor[i]);
+                    i++;
+                }
+            }
+            if(modif.equalsIgnoreCase("sinopsis")) {
+                if(_nuevoValor[i].isEmpty()){i++;}
+                else{
+                    peli.setSinopsis(_nuevoValor[i]);
+                    i++;
+                }
+            }
+        }
+        System.out.println(peli);
+    }
+    
+    /**
+     * 
+     * @param cad
+     * @return 
+     */
     public String[] getDatosPelicula(String cad) {
         String [] p = new String[this.getCAMPOS_PELICULA().length];
         List<Pelicula> tmpPelis;
@@ -336,20 +431,6 @@ public class Model {
         return p;
     }
    
-    //**************************************************************************
-    
-    public String[] getCAMPOS_PELICULA() {
-        return fmt.getCAMPOS_PELICULA();
-    }
-
-    public String[] getCAMPOS_DIRECTOR() {
-        return fmt.getCAMPOS_DIRECTOR();
-    }
-
-    public String[] getCAMPOS_ACTOR() {
-        return fmt.getCAMPOS_ACTOR();
-    }
-
    /* public void actualizarColeccionTitulosDirector(String _film, String dir, boolean b) {
         Collection<Director> tmpDir = fmt.getDirectores();
         boolean set=false;
@@ -364,8 +445,34 @@ public class Model {
             }
         }
     }*/
-  
-    
-    
+
+    public boolean buscarEnColecciones(String _busca, String _donde) 
+    {   
+    switch (_donde){
+        case Filmoteca.PELICULA:
+            if (fmt.getPeliculas().stream().anyMatch((x) -> (x.getTitulo().equalsIgnoreCase(_busca)))) {
+                return true;
+            }
+            return false;
+            //break;
+        case Filmoteca.DIRECTOR:
+            if (fmt.getDirectores().stream().anyMatch((x) -> (x.getNombre().equalsIgnoreCase(_busca)))) {
+                return true;
+            }
+            return false;
+            //break;
+        case Filmoteca.ACTOR:
+            for(Director x : fmt.getDirectores()){
+                if(x.getNombre().equalsIgnoreCase(_busca))
+                    return true;
+            }
+            return false;
+            //break;
+        default:
+            System.err.println("ERROR: MÉTODO del modelo: buscarEnColecciones: no debería estar aquí.");
+            return false;
+        }
+    }
+   
     
 }//End Class.

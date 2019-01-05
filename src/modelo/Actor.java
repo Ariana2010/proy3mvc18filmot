@@ -27,11 +27,12 @@ public class Actor implements Serializable{
     private final static String SEPARADOR_CAMPOS = "#";
     private final static String SEPARADOR_COLL = "\t";
     private final String SEPARADOR_COMA = ",";
-    
+    //Valor por defecto para la fecha
     private final static String DEFAULT_DATE = "2018-12-31";
+    //OTROS
     private final static int NUMERO_CAMPOS = 5;
-
-       
+    public static final int NUMCAMPOSMODIF = 3;
+           
     public String getNombre() {
         return nombre;
     }
@@ -208,7 +209,7 @@ public class Actor implements Serializable{
 
     @Override
     public String toString() {
-        return "Actor{" + "nombre=" + nombre + ", fechaNac=" + fechaNac + '}';
+        return "Actor{" + "Nombre=" + nombre + ", Fecha nacimiento=" + fechaNac + ", Nacionalidad=" + nacionalidad + '}';
     }
         
     

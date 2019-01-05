@@ -6,7 +6,12 @@
 package controlador;
 
 import modelo.Model;
+import static java.lang.System.*;
 import modelo.Pelicula;
+import modelo.Director;
+import modelo.Actor;
+import modelo.Filmoteca;
+
 
 /**
  *
@@ -14,46 +19,17 @@ import modelo.Pelicula;
  */
 public class Controller {
 
-    Model m = new Model();
+Model m = new Model();
     
     public void loadFiles() {
         m.loadFiles();
     }
 
-    public void salida() {
+    public void saveFiles() {
         m.saveFiles();
     }
 
-    public boolean altaPelicula(String[] nuevo) 
-    {
-        boolean res;
-        try {
-            m.guardarPeliculaEnModelo(nuevo);
-            //Actualizar_Director(nombresDirectoresnuevo[4], tituloPeliculanuevo[0]);
-            //this.actualizarColeccionTitulosDirector(nuevo[0],nuevo[4]);
-            //Actualizar_Actor(nuevo[8]);
-            
-           // m.guardarDirectores(nuevo);
-           // m.guardarActores(nuevo);
-            res = true;
-        }catch (NumberFormatException  exc ){
-            res = false;
-            throw exc;
-        }
-        return res;
-    }
-    
-    /**
-     * 
-     * @param cad
-     * @return 
-     */
-    public String[] getDatosPelicula(String cad) {
-        return (m.getDatosPelicula(cad));
-    }
-   
     //***************************************************************
-    
     public String[] getCAMPOS_PELICULA() {
         return m.getCAMPOS_PELICULA();
     }
@@ -65,7 +41,88 @@ public class Controller {
     public String[] getCAMPOS_ACTOR() {
         return m.getCAMPOS_ACTOR();
     }
+    
+    //***************************************************************
+    public boolean altaPelicula(String[] nuevo) 
+    {
+        boolean res;
+        try {
+            m.guardarPeliculaEnModelo(nuevo);
+            res = true;
+        }catch (NumberFormatException  exc ){
+            res = false;
+            throw exc;
+        }
+        return res;
+    }
+    
+    //***************************************************************
+    /**
+     * 
+     * @param cad
+     * identifica el título de la película, de la cuál deben 
+     * recuperarse los datos.
+     * @return 
+     * Los datos de la película consultada, ordenados en un array de String,
+     * talque que cada posición del array se corresponde con un campo de datos.
+     */
+    public String[] getDatosPelicula(String cad) {
+        return (m.getDatosPelicula(cad));
+    }
+   
+    //***************************************************************
+    public String[] getCamposModificar(String _queColeccion) {
+       //debe retornar los campos de una susceptibles de ser modificados.
+       String[] camposMof = null;
+       int i = 0;
+       switch(_queColeccion){
+           case "pelicula":
+               //No modificables, el título y las colecciones.
+               camposMof = new String[Pelicula.NUMCAMPOSMODIF];
+               for (String x : this.getCAMPOS_PELICULA()){
+                   if(x.equals("Título") || x.startsWith("*")){ /*do nothing*/ }
+                   else{camposMof[i++] = x;}
+               }
+/**/            System.out.println("Pelis campos modificables: "+camposMof);
+               break;
+           case "director":
+               camposMof = new String[Director.NUMCAMPOSMODIF];
+               for (String x : this.getCAMPOS_DIRECTOR()){
+                   if(x.equals("Nombre") || x.startsWith("*")){ /*do nothing*/ }
+                   else{camposMof[i++] = x;}
+               }
+/**/            System.out.println("Director campos modificables: "+camposMof);               
+               break;
+           case "actor":
+               camposMof = new String[Actor.NUMCAMPOSMODIF];
+               for (String x : this.getCAMPOS_ACTOR()){
+                   if(x.equals("Nombre") || x.startsWith("*")){ /*do nothing*/ }
+                   else{camposMof[i++] = x;}
+               }
+/**/            System.out.println("Actor campos modificables: "+camposMof); 
+               break;
+           default:
+               System.err.println("ERROR: método getCamposModificar: No debería estar aquí.");
+               exit(1);        
+       }
+       return camposMof;
+    }
 
+    public void modificarPelicula(String _titulo,String[] _camposModif,String[] _nuevoValor)
+    {
+        m.actualizarDatosPelicula(_titulo,_camposModif,_nuevoValor); 
+    }
+
+    public boolean verificarPeliculaEsta(String titulo) {
+        return (m.buscarEnColecciones(titulo, Filmoteca.PELICULA));
+    }
+
+    public void eliminarPeliculaDeLaColección(String titulo) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    
+    //***************************************************************
     public void exportarDirectores() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -74,6 +131,7 @@ public class Controller {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    //***************************************************************
     /*
     private void actualizarColeccionTitulosDirector(String _film,String _directores){
         String[] directores = _directores.split(Pelicula.SEPARADOR_COLL);
@@ -81,6 +139,5 @@ public class Controller {
             m.actualizarColeccionTitulosDirector(_film,dir,true);
         }
     }*/
-
     
-}
+}//End Class

@@ -40,7 +40,12 @@ public class Filmoteca {
     private List<Pelicula> peliculas;
     private List<Director> directores;
     private List<Actor> actores;
-    
+    /*
+     * Constantes Publicas
+     */
+    public static final String PELICULA = "1";
+    public static final String DIRECTOR = "2";
+    public static final String ACTOR = "3";
     /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
     public String getExpDirectores() {
@@ -108,5 +113,50 @@ public class Filmoteca {
     public void setActores(Collection<Actor> actores) {
         this.actores = (List) actores;
     }
+
+    /**
+     * 
+     * @param _titulo
+     * @return null sino se encuentra ese título de película en la colección.
+     */
+    Pelicula getUnaPeliculaPorTitulo(String _titulo) {
+        Pelicula peli = null;
+        for(Pelicula p: this.peliculas){
+            if(p.getTitulo().equalsIgnoreCase(_titulo)){
+                peli = p;
+            }
+        }
+        return peli;
+    }
     
-}
+    /**
+     * 
+     * @param _nombre
+     * @return null sino se encuentra ese nombre de director en la colección.
+     */
+    Director getUnDirectorPorNombre(String _nombre){
+        Director dir = null;
+        for(Director d: this.directores){
+            if(d.getNombre().equalsIgnoreCase(_nombre)){
+                dir = d;
+            }
+        }
+        return dir;
+    }
+    
+    /**
+     * 
+     * @param _nombre
+     * @return null sino se encuentra ese nombre de actor en la colección.
+     */
+    Actor getUnActorPorNombre(String _nombre){
+        Actor act = null;
+        for(Actor a: this.actores){
+            if(a.getNombre().equalsIgnoreCase(_nombre)){
+                act = a;
+            }
+        }
+        return act;
+    }
+    
+}//End Class

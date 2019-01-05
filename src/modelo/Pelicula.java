@@ -34,7 +34,8 @@ public final static String SEPARADOR_CAMPOS = "#";
 public final static String SEPARADOR_COLL = "\t";
 private final String SEPARADOR_COMA = ",";
 
-private final int NUM_CAMPOS = 12;
+static final int NUM_CAMPOS = 12;
+public static final int NUMCAMPOSMODIF = 9;
 //*******************************************************************/
 /**
  * Método factoría
@@ -256,8 +257,7 @@ private final int NUM_CAMPOS = 12;
 
     @Override
     public String toString() {
-        return "Pelicula{" + "titulo=" + titulo + ", direccion=" + direccion + '}';
+        return "Pelicula{" + "Titulo=" + titulo + ", Año=" + year + ", País=" + pais + ", Guión=" + guion + ", Directores=" + direccion + '}';
     }
-    
-    
-}
+      
+}//End Class
