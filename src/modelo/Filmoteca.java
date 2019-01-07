@@ -29,7 +29,7 @@ public class Filmoteca {
      * Los campos precedidos por un asterisco son aquellos que son una colección.
      */
     private final String[] CAMPOS_PELICULA = {"Título", "Año", "Duración", "País", "*Dirección",
-        "Guíon", "Música", "Fotografía", "*Reparto", "Productora", "Género", "Sinopsis"};
+        "Guion", "Música", "Fotografía", "*Reparto", "Productora", "Género", "Sinopsis"};
     private final String[] CAMPOS_DIRECTOR = {"Nombre","Fecha de nacimiento","Nacionalidad",
         "Ocupación","*Películas"};
     private final String[] CAMPOS_ACTOR = {"Nombre","Fecha de nacimiento","Nacionalidad",

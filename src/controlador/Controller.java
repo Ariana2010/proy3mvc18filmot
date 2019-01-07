@@ -7,6 +7,7 @@ package controlador;
 
 import modelo.Model;
 import static java.lang.System.*;
+import java.util.Arrays;
 import modelo.Pelicula;
 import modelo.Director;
 import modelo.Actor;
@@ -72,7 +73,7 @@ Model m = new Model();
    
     //***************************************************************
     public String[] getCamposModificar(String _queColeccion) {
-       //debe retornar los campos de una susceptibles de ser modificados.
+       //debe retornar los campos susceptibles de ser modificados.
        String[] camposMof = null;
        int i = 0;
        switch(_queColeccion){
@@ -83,7 +84,7 @@ Model m = new Model();
                    if(x.equals("Título") || x.startsWith("*")){ /*do nothing*/ }
                    else{camposMof[i++] = x;}
                }
-/**/            System.out.println("Pelis campos modificables: "+camposMof);
+/**/            System.out.println("Control. Pelicula campos modificables: "+Arrays.toString(camposMof));
                break;
            case "director":
                camposMof = new String[Director.NUMCAMPOSMODIF];
@@ -91,7 +92,7 @@ Model m = new Model();
                    if(x.equals("Nombre") || x.startsWith("*")){ /*do nothing*/ }
                    else{camposMof[i++] = x;}
                }
-/**/            System.out.println("Director campos modificables: "+camposMof);               
+/**/            System.out.println("Director campos modificables: "+Arrays.toString(camposMof));               
                break;
            case "actor":
                camposMof = new String[Actor.NUMCAMPOSMODIF];
@@ -99,7 +100,7 @@ Model m = new Model();
                    if(x.equals("Nombre") || x.startsWith("*")){ /*do nothing*/ }
                    else{camposMof[i++] = x;}
                }
-/**/            System.out.println("Actor campos modificables: "+camposMof); 
+/**/            System.out.println("Actor campos modificables: "+Arrays.toString(camposMof)); 
                break;
            default:
                System.err.println("ERROR: método getCamposModificar: No debería estar aquí.");
@@ -118,7 +119,7 @@ Model m = new Model();
     }
 
     public void eliminarPeliculaDeLaColección(String titulo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        m.eliminarDelModelo(titulo,Filmoteca.PELICULA);
     }
 
     

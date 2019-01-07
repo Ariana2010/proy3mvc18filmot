@@ -178,20 +178,20 @@ public class Director implements Serializable{
     
     private String getCamposCol(Collection<String> coll,String sep) {
         if(coll.size() == 1) {
-            String n = null;
+            String campoColl = null;
             for(String c:coll){
-                n = c;
+                campoColl = c;
             }
-        return n; 
+        return campoColl; 
         }else{
-            StringBuilder nm = new StringBuilder();
+            StringBuilder camposColl = new StringBuilder();
             coll.stream().map((c) -> {
-                nm.append(c);
+                camposColl.append(c);
                 return c;
             }).forEachOrdered((_item) -> {
-                nm.append(sep);
+                camposColl.append(sep);
             });
-            return nm.substring(0, nm.length()-1);
+            return camposColl.substring(0, camposColl.length()-1);
         }
     }
 
@@ -209,7 +209,7 @@ public class Director implements Serializable{
 
     @Override
     public String toString() {
-        return "Director{" + "Nombre=" + nombre + ", Fecha nacimiento=" + fechaNac + ", Nacionalidad=" + nacionalidad + ", Ocupacion=" + ocupacion + ", \nPeliculas que ha dirigido=" + _pelisDir + '}';
+        return "Director{" + "Nombre=" + nombre + ", Fecha nacimiento=" + fechaNac + ", Nacionalidad=" + nacionalidad + ", Ocupacion=" + ocupacion + ", \n\tPeliculas que ha dirigido=" + _pelisDir + '}';
     }
     
     

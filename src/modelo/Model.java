@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  *
@@ -292,45 +293,54 @@ public class Model {
         String tPeli = nuevo[0];    //Campo 1 de la clase Pelicula.
         String listaDir = nuevo[4];  //Campo 5 de la clase Pelicula.
         String listaAct = nuevo[8];  //Campo 9 de la clase Pelicula.
+        
         List<Director> dir = (List)fmt.getDirectores();
-        String[] directores = listaDir.split(Director.getSEPARADOR_COLL());
-        for(String name : directores){
-            boolean exist = false;
-            for (Director d : dir){
-                if(d.getNombre().equalsIgnoreCase(name)){
-                    d.addPelisDir(tPeli);
-                    exist = true;
-                    System.out.println(d);
+        if(!listaDir.isEmpty()){
+            String[] directores = listaDir.split(Director.getSEPARADOR_COLL());
+            for(String name : directores){
+                if(!name.isEmpty()){
+                    boolean exist = false;
+                    for (Director d : dir){
+                        if(d.getNombre().equalsIgnoreCase(name)){
+                            d.addPelisDir(tPeli);
+                            exist = true;
+                            System.out.println(d);
+                        }
+                    }
+                    if(!exist){ //el director no existe asi que no se ha agregado la pelicula a ninguna lista.
+                        Director cnd = new Director(name,tPeli);
+                        dir.add(cnd);
+                        System.out.println(cnd);
+                    }
                 }
-            }
-            if(!exist){ //el director no existe asi que no se ha agregado la pelicula a ninguna lista.
-                Director cnd = new Director(name,tPeli);
-                dir.add(cnd);
-                System.out.println(cnd);
             }
         }
         fmt.setDirectores(dir);
         //Se ha realizado 1.actualizar lista peliculas director.
         //List<Actor> act = (List)fmt.getActores();
         
-        String[] actores = listaAct.split(Director.getSEPARADOR_COLL());
-        for(String name : actores){
-            boolean exist = false;
-            //for (Actor d : act){
-            for (Actor d : fmt.getActores()){
-                if(d.getNombre().equalsIgnoreCase(name)){
-                    d.addPelisAct(tPeli);
-                    exist = true;
-                    System.out.println(d);
-                }
-            }
-            if(!exist){
-                Actor cna = new Actor(name,tPeli);
-                try{
-                fmt.getActores().add(cna);}catch(UnsupportedOperationException e){
-                    System.err.println("ERROR: "+e);
-                }
-                System.out.println(cna);
+        if(!listaAct.isEmpty()){
+            String[] actores = listaAct.split(Director.getSEPARADOR_COLL());
+            for(String name : actores){
+                if(!name.isEmpty()){
+                    boolean exist = false;
+                    //for (Actor d : act){
+                    for (Actor d : fmt.getActores()){
+                        if(d.getNombre().equalsIgnoreCase(name)){
+                            d.addPelisAct(tPeli);
+                            exist = true;
+                            System.out.println(d);
+                        }
+                    }
+                    if(!exist){
+                        Actor cna = new Actor(name,tPeli);
+                        try{
+                        fmt.getActores().add(cna);}catch(UnsupportedOperationException e){
+                            System.err.println("ERROR: "+e);
+                        }
+                        System.out.println(cna);
+                    }
+                }    
             }
         }
         //Se ha realizado 2.actualizar lista peliculas actor.
@@ -338,6 +348,12 @@ public class Model {
         
     }
 
+    /**
+     * Falta comprobar que efectivamente realiza los cambios.
+     * @param _titulo
+     * @param _modificar
+     * @param _nuevoValor 
+     */
     public void actualizarDatosPelicula(String _titulo,String[] _modificar,String[] _nuevoValor){
         Pelicula peli = fmt.getUnaPeliculaPorTitulo(_titulo);
  /**/       System.out.println(peli);
@@ -367,9 +383,10 @@ public class Model {
                 else
                     i++;
             }
-            if(modif.equalsIgnoreCase("guión")){
+            if(modif.equalsIgnoreCase("guion")){
                 if(!_nuevoValor[i].isEmpty()){
                     peli.setGuion(_nuevoValor[i]);
+                    i++;
                 }
                 else
                     i++;
@@ -472,6 +489,23 @@ public class Model {
             System.err.println("ERROR: MÉTODO del modelo: buscarEnColecciones: no debería estar aquí.");
             return false;
         }
+    }
+
+    public void eliminarDelModelo(String _nombre, String _eliminarDe) {
+    switch (_eliminarDe){
+        case Filmoteca.PELICULA:
+            fmt.getPeliculas().removeIf(p -> p.getTitulo().equalsIgnoreCase(_nombre));
+            break;
+        case Filmoteca.DIRECTOR:
+            fmt.getDirectores().removeIf(d -> d.getNombre().equalsIgnoreCase(_nombre));
+            break;
+        case Filmoteca.ACTOR:
+            fmt.getActores().removeIf(a -> a.getNombre().equalsIgnoreCase(_nombre));
+            break;
+        default:
+            System.err.println("ERROR: MODELO.JAVA: eliminarDelModelo(): no debería estar aquí.");
+            System.exit(1);
+        }    
     }
    
     

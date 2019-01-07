@@ -86,28 +86,75 @@ public static final int NUMCAMPOSMODIF = 9;
     public static Pelicula factoryMethodPeliculaXcampos(String[] nuevo) 
             throws NumberFormatException {
         Pelicula unaPeli = new Pelicula();
-        //Los atributos 5 y 9 son colecciones.
-        unaPeli.setTitulo(nuevo[0]);
-        unaPeli.setYear(Integer.parseInt(nuevo[1]));
-        unaPeli.setDuracion(Integer.parseInt(nuevo[2]));
-        unaPeli.setPais(nuevo[3]);
+        if (nuevo[0].isEmpty()){
+            System.err.println("ERROR: no puede guardarse una película sin nombre.Terminar programa.");
+            System.exit(12);
+        }else{
+            unaPeli.setTitulo(nuevo[0]);
+        }
+        if (nuevo[1].isEmpty()){
+            unaPeli.setYear(0);
+        }else{
+            unaPeli.setYear(Integer.parseInt(nuevo[1]));
+        }
+        if (nuevo[2].isEmpty()){
+            unaPeli.setDuracion(0);
+        }else{
+            unaPeli.setDuracion(Integer.parseInt(nuevo[2]));
+        }
+        if (nuevo[3].isEmpty()){
+            unaPeli.setPais("Desconocido");
+        }else{
+            unaPeli.setPais(nuevo[3]);
+        }
         /* Atributo número 5 es una coleccion: */
+        if(nuevo[4].isEmpty()){
+            unaPeli.setDireccion(Arrays.asList("Sin directores conocidos"));
+        }else{
         String[] t=nuevo[4].split("\t");
         List<String> man = Arrays.asList(t);
-        //List<String> man = Arrays.asList(nuevo[4]);
         unaPeli.setDireccion(man);
+        }
         /**********/
-        unaPeli.setGuion(nuevo[5]);
-        unaPeli.setMusica(nuevo[6]);
-        unaPeli.setFotografia(nuevo[7]);
+        if(nuevo[5].isEmpty()){
+           unaPeli.setGuion("Anónimo");
+        }else{
+            unaPeli.setGuion(nuevo[5]);
+        }
+        if(nuevo[6].isEmpty()){
+            unaPeli.setMusica("Anónimo");
+        }else{
+            unaPeli.setMusica(nuevo[6]);
+        }
+        if(nuevo[7].isEmpty()){
+            unaPeli.setFotografia("Anónimo");
+        }else{
+            unaPeli.setFotografia(nuevo[7]);
+        }
         /* Atributo número 9 es una coleccion: */
-        t = nuevo[8].split("\t");
-        unaPeli.setReparto(Arrays.asList(t));
+        if(nuevo[8].isEmpty()){
+            unaPeli.setReparto(Arrays.asList("Sin reparto conocido"));
+        }else{
+            String[] t = nuevo[8].split("\t");
+            unaPeli.setReparto(Arrays.asList(t));
+        }
         //unaPeli.setReparto(Arrays.asList(nuevo[8]));
         /**********/
-        unaPeli.setProductora(nuevo[9]);
-        unaPeli.setGenero(nuevo[10]);
-        unaPeli.setSinopsis(nuevo[11]);
+        if(nuevo[9].isEmpty()){
+            unaPeli.setProductora("Desconocida");
+        }else{
+            unaPeli.setProductora(nuevo[9]);
+        }
+        if(nuevo[10].isEmpty()){
+            unaPeli.setGenero("Sin clasificar");
+        }else{
+            unaPeli.setGenero(nuevo[10]);
+        }
+        if(nuevo[11].isEmpty()){
+            unaPeli.setSinopsis(" ...");
+        }else{
+            unaPeli.setSinopsis(nuevo[11]);
+        }
         return unaPeli;
     }   
     
@@ -228,9 +275,16 @@ public static final int NUMCAMPOSMODIF = 9;
     
     //*******************************************************************/
 
+    /**
+     * Retorna un String separado por "sep" que contiene cada uno de los Strings
+     * que conforman la colección "coll"
+     * @param coll
+     * @param sep
+     * @return 
+     */
     private String getCamposCol(Collection<String> coll,String sep) {
-        if(coll.size() == 1) {
-            String n = null;
+        if(coll.isEmpty()) {
+            String n = "coleccion vacía";
             for(String c:coll){
                 n = c;
             }
@@ -257,7 +311,7 @@ public static final int NUMCAMPOSMODIF = 9;
 
     @Override
     public String toString() {
-        return "Pelicula{" + "Titulo=" + titulo + ", Año=" + year + ", País=" + pais + ", Guión=" + guion + ", Directores=" + direccion + '}';
+        return "Pelicula{" + "Titulo=" + titulo + ", Año=" + year + ", País=" + pais + ", Guion=" + guion + ", Directores=" + direccion + '}';
     }
       
 }//End Class

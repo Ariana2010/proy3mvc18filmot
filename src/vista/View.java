@@ -58,7 +58,7 @@ public void runMenu(String menu) {
                 }while(!volver);
                 break;
             case "2":   //Opción Películas
-                this.opcionPeliculas();
+                this.peliculasOpcion();
                 break;
             case "3":   //Opción Directores
                 this.opcionDirectores();
@@ -118,7 +118,7 @@ private boolean preguntarSiSalirOrContinuar(String q) {
 //=====================================================================//
 //**************************   PELICULAS  *****************************//
 //=====================================================================//  
-private void opcionPeliculas() {
+private void peliculasOpcion() {
     //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     String menu = "MENÚ PELÍCULAS:"
                 + "\n1 -Añadir película a la colección."
@@ -133,13 +133,13 @@ private void opcionPeliculas() {
         opSub = readString(menu, _opciones);
         switch(opSub){
             case "1": //Añadir película
-                this.altaPelicula(control.getCAMPOS_PELICULA());
+                this.peliculaAlta(control.getCAMPOS_PELICULA());
                 break;
             case "2": //Borrar película
-                this.borrarPelicula();
+                this.peliculaBaja();
                 break;
             case "3": //Modificar película
-                this.modificarPelicula();
+                this.peliculaModificar();
                 break;
             case "4": //Consultar película
                 this.consultar("pelicula");
@@ -155,7 +155,7 @@ private void opcionPeliculas() {
     } while(!volver); 
 }
 
-private void altaPelicula(String[] campos) {
+private void peliculaAlta(String[] campos) {
     String [] nuevo;
     int index = 0;
     boolean done;
@@ -170,7 +170,7 @@ private void altaPelicula(String[] campos) {
     for(String s : campos){
         if(s.startsWith("*")){  //este campo es una colección
             //System.out.printf("%s : ",s.substring(1));
-            nuevo[index++]= this.leerColl(s.substring(1));
+            nuevo[index++]= this.leerColeccion(s.substring(1));
             /*follow= this.preguntarSiSalirOrContinuar("Continuar?");  //*/
         }else{ 
             System.out.printf("%s: ",s);
@@ -195,7 +195,7 @@ private void altaPelicula(String[] campos) {
     }
 }
 
-private String leerColl(String d) {
+private String leerColeccion(String d) {
     StringBuilder coll = new StringBuilder();
     String c;
     System.out.println("Cuando termine de introducir los valores para "
@@ -208,23 +208,27 @@ private String leerColl(String d) {
             coll.append(c);
             coll.append("\t");
         }
+    
     }while (!c.equals("x"));
+    if(coll.length() == 0){
+        return "";
+    }
     return (coll.substring(0, coll.length()-1));
 }
 
-private void borrarPelicula() {
+private void peliculaBaja() {
     out.print("Indique el nombre de la película que desea eliminar de la colección: ");
     String titulo = sc.nextLine();
     if (!control.verificarPeliculaEsta(titulo)){
         out.print("La película \""+titulo+"\" no está en la colección");
         exit(0);
     }
-    control.eliminarPeliculaDeLaColección(titulo);/*implementar*/
+    control.eliminarPeliculaDeLaColección(titulo);/*Comprobar que efecitvamente se realiza.*/
 }
 
-private void modificarPelicula() {
+private void peliculaModificar() {
     String titulo;
-    String[] camposModif = control.getCamposModificar("pelicula"); /*implementar*/
+    String[] camposModif = control.getCamposModificar("pelicula");
     String[] nuevoValor = new String[camposModif.length];
     out.println("Instrucciones:\nPara cada campo modificable, introduzca su valor, si "
             + "no desea cambiarlo pulse \"x\" y después \"intro\"");
@@ -234,7 +238,7 @@ private void modificarPelicula() {
     }
     out.println("Por favor teclea el nombre de la película que desea modificar");
     titulo = sc.nextLine();
-    if(!control.verificarPeliculaEsta(titulo))/*implemetar*/ {
+    if(!control.verificarPeliculaEsta(titulo)) {
         out.println("\""+titulo+"\" no esta en la colección, si desea puede añadir"
                 + "está película a la colección.");
         exit(0);
@@ -249,7 +253,8 @@ private void modificarPelicula() {
         }
         i++;
     }
-    control.modificarPelicula(titulo,camposModif,nuevoValor); /*implementar*/
+    control.modificarPelicula(titulo,camposModif,nuevoValor); /*implementar falta que
+     efectivamente realice los cambios,comprobar.*/
 }
 
 private void consultar(String consulta) {
@@ -265,7 +270,7 @@ private void consultar(String consulta) {
             if (pelicula[0]!=null){
                 this.showDatos(pelicula,control.getCAMPOS_PELICULA());
             }else{
-                System.out.println("La película no está aún en la colección.");
+                System.out.println("La película no está en la colección.");
             }
                 break;
         case "actor": //pedir nombre por teclado
@@ -388,9 +393,11 @@ private void showDatos(String[] datos,String[] title) {
     System.out.println("");
     for(String p:datos){
         if(title[index].startsWith("*")){
-            System.out.println(title[index++].substring(1).toUpperCase()+":\n"+p);
+            System.out.println(title[index++].substring(1).toUpperCase());
+            if(!(p == null)){System.out.println(p);}
         }else{
-            System.out.println(title[index++].toUpperCase()+":\n"+p);                    
+            System.out.println(title[index++].toUpperCase());                    
+            if(!(p == null)){System.out.println(p);}
         }
     }
 }
