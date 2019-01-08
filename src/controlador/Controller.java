@@ -46,7 +46,10 @@ Model m = new Model();
     //***************************************************************
     public boolean altaPelicula(String[] nuevo) 
     {
-        boolean res;
+        boolean res=false;
+        if(nuevo[0].isEmpty()){
+            err.println("ERROR: No se puede dar de alta una Película sin título.");
+            return res; }
         try {
             m.guardarPeliculaEnModelo(nuevo);
             res = true;
@@ -140,5 +143,15 @@ Model m = new Model();
             m.actualizarColeccionTitulosDirector(_film,dir,true);
         }
     }*/
+
+    public String getDatosPeliculaActor(String cad) {
+        String datos = new String();
+        if(m.buscarEnColecciones(cad, Filmoteca.ACTOR)){
+          return(m.getPeliculasActor(cad));  
+        }else{
+         datos = "El actor no se encuentra en la colección.";
+         return datos;   
+        }
+    }
     
 }//End Class

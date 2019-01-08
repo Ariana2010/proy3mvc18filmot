@@ -8,6 +8,7 @@ package modelo;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -71,7 +72,7 @@ public class Director implements Serializable{
     }
 
     public void setPelisDir(Collection<String> _pelisDir) {
-        this._pelisDir = _pelisDir;
+        this._pelisDir = (List)_pelisDir;
     }
 
     public static String getSEPARADOR_CAMPOS() {
@@ -117,7 +118,7 @@ public class Director implements Serializable{
                 /* Atributo número 5 es una coleccion de nombres de películas: */
                 if(!separado[4].isEmpty()) {
                     String[] t=separado[4].split(Director.getSEPARADOR_COLL());
-                    List<String> man = Arrays.asList(t);
+                    List<String> man = new ArrayList(Arrays.asList(t));
                     unDir.setPelisDir(man);
                 }
             }
@@ -139,7 +140,7 @@ public class Director implements Serializable{
         this.fechaNac = fechaNac;
         this.nacionalidad = nacionalidad;
         this.ocupacion = ocupacion;
-        this._pelisDir = _pelisDir;
+        this._pelisDir = (List)_pelisDir;
     }
     /**
      * Contructor por defecto, asigna la fecha por defecto 31/12/2018 en formato ISO_LOCAL_DATE.
@@ -150,7 +151,7 @@ public class Director implements Serializable{
         this.fechaNac = LocalDate.parse(Director.DEFAULT_DATE);
         this.nacionalidad = "Desconocida";
         this.ocupacion = "Director de cine";
-        this._pelisDir = Arrays.asList("Sin títulos conocidos");
+        this._pelisDir = new ArrayList<>(Arrays.asList("Sin títulos conocidos"));
     }
     
     public Director(String name,String peli) {
@@ -158,7 +159,7 @@ public class Director implements Serializable{
         this.fechaNac = LocalDate.parse(Director.DEFAULT_DATE);
         this.nacionalidad = "Desconocida";
         this.ocupacion = "Director de cine";
-        this._pelisDir = Arrays.asList(peli);
+        this._pelisDir = new ArrayList<>(Arrays.asList(peli));
     }
     /**
      * 

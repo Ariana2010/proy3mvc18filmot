@@ -19,6 +19,9 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -479,11 +482,17 @@ public class Model {
             return false;
             //break;
         case Filmoteca.ACTOR:
-            for(Director x : fmt.getDirectores()){
-                if(x.getNombre().equalsIgnoreCase(_busca))
-                    return true;
+            boolean ret = false;
+            for(Actor x : fmt.getActores()){
+                if(x.getNombre().equalsIgnoreCase(_busca)){
+                    System.out.println(x.getNombre());
+                    ret =true;
+                }
             }
-            return false;
+        //    fmt.getActores().forEach((x) -> {
+        //        System.out.println("\t"+x.getNombre());    });
+        //    System.out.println(ret);
+            return ret;
             //break;
         default:
             System.err.println("ERROR: MÉTODO del modelo: buscarEnColecciones: no debería estar aquí.");
@@ -494,7 +503,50 @@ public class Model {
     public void eliminarDelModelo(String _nombre, String _eliminarDe) {
     switch (_eliminarDe){
         case Filmoteca.PELICULA:
+            String nombrePeli = new String();
+            List<String> directoresPeli = new ArrayList<>();
+            List<String> actoresPeli = new ArrayList<>();
+            for (Pelicula x:fmt.getPeliculas()){
+                if (x.getTitulo().equalsIgnoreCase(_nombre)){
+                    nombrePeli = x.getTitulo();
+                    directoresPeli = (List)x.getDireccion();
+                    actoresPeli = (List)x.getReparto();
+                }
+            }
             fmt.getPeliculas().removeIf(p -> p.getTitulo().equalsIgnoreCase(_nombre));
+            //Eliminando de la lista de peliculas de los directores
+            List<Director> listDir =  fmt.getDirectores();
+            Iterator<Director> ind = listDir.listIterator();
+            while(ind.hasNext()){
+                Director dir = ind.next();
+                String nombreDir = dir.getNombre();
+                Iterator<String> li = dir.getPelisDir().iterator();
+                for(String x : directoresPeli){
+                    if(nombreDir.equalsIgnoreCase(x)) {
+                        while(li.hasNext()){
+                            if (li.next().equals(nombrePeli)){
+                                li.remove();
+                            }
+                        }
+                    }//else se pasa al siguiente director  
+                }
+            }
+            //Eliminando de la lista de peliculas de los actores
+            List<Actor> listAct = (List)fmt.getActores();
+            for(String xp : actoresPeli){
+                listAct.stream().filter((act) -> (act.getNombre().equals(xp))).forEachOrdered((act) -> {
+                    act.getPelisAct().removeIf(xn -> xn.equalsIgnoreCase(_nombre));
+        });
+            }
+            /*
+            for(String xp:actoresPeli){
+                for(Actor act : listAct){
+                    if (act.getNombre().equals(xp)){
+                        act.getPelisAct().removeIf(xn -> xn.equalsIgnoreCase(_nombre));
+                    }
+                }
+            }
+             */
             break;
         case Filmoteca.DIRECTOR:
             fmt.getDirectores().removeIf(d -> d.getNombre().equalsIgnoreCase(_nombre));
@@ -503,9 +555,37 @@ public class Model {
             fmt.getActores().removeIf(a -> a.getNombre().equalsIgnoreCase(_nombre));
             break;
         default:
-            System.err.println("ERROR: MODELO.JAVA: eliminarDelModelo(): no debería estar aquí.");
+            System.err.println("ERROR: MODEL.JAVA: eliminarDelModelo(): no debería estar aquí.");
             System.exit(1);
         }    
+    }
+
+    public String getPeliculasActor(String cad) {
+        String datos = "Sin peliculas conocidas";
+        for(Actor act: fmt.getActores()){
+            if(act.getNombre().equalsIgnoreCase(cad)){
+                if(act.getPelisAct().isEmpty()){
+                    return datos;
+                }else{
+                    StringBuilder pelis = new StringBuilder();
+                    act.getPelisAct().stream().map((p) -> {
+                        pelis.append(p);
+                        return p;
+                    }).forEachOrdered((_item) -> {
+                        pelis.append(Actor.getSEPARADOR_COMA());
+                    });
+                    /*
+                    StringBuilder pelis = new StringBuilder();
+                    for(String p:act.getPelisAct()){
+                        pelis.append(p);
+                        pelis.append(Actor.getSEPARADOR_COMA());
+                    }
+                     */
+                    datos = pelis.substring(0, pelis.length()-1);
+                } 
+            }
+        }
+        return datos;
     }
    
     

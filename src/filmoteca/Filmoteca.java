@@ -19,13 +19,14 @@ public class Filmoteca {
     public static void main(String[] args) {
         // TODO code application logic here
         View v=new View();
+        String[] opciones = {"1","2","3","4","5","q"};
         v.runMenu("\nMENÚ PRINCIPAL:"
                 + "\n1 -Archivos "
                 + "\n2 -Películas "
                 + "\n3 -Directores"
                 + "\n4 -Actores"
                 + "\n5 -Listados"
-                + "\nq -Salir\n ");
+                + "\nq -Salir\n ",opciones);
     }
     
 }

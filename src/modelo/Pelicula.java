@@ -6,6 +6,7 @@
 package modelo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -56,7 +57,7 @@ public static final int NUMCAMPOSMODIF = 9;
         unaPeli.setPais(separado[3]);
         /* Atributo número 5 es una coleccion: */
         String[] t=separado[4].split(Pelicula.SEPARADOR_COLL);
-        List<String> man = Arrays.asList(t);
+        List<String> man = new ArrayList<>(Arrays.asList(t));
         unaPeli.setDireccion(man);
         /**********/
         unaPeli.setGuion(separado[5]);
@@ -64,7 +65,8 @@ public static final int NUMCAMPOSMODIF = 9;
         unaPeli.setFotografia(separado[7]);
         /* Atributo número 9 es una coleccion: */
         t = separado[8].split(Pelicula.SEPARADOR_COLL);
-        unaPeli.setReparto(Arrays.asList(t));
+        man = new ArrayList<>(Arrays.asList(t));
+        unaPeli.setReparto(man);
         /**********/
         unaPeli.setProductora(separado[9]);
         unaPeli.setGenero(separado[10]);
@@ -87,7 +89,7 @@ public static final int NUMCAMPOSMODIF = 9;
             throws NumberFormatException {
         Pelicula unaPeli = new Pelicula();
         if (nuevo[0].isEmpty()){
-            System.err.println("ERROR: no puede guardarse una película sin nombre.Terminar programa.");
+            System.err.println("ERROR: no puede guardarse una película sin nombre.Terminando Programa.");
             System.exit(12);
         }else{
             unaPeli.setTitulo(nuevo[0]);
@@ -109,10 +111,10 @@ public static final int NUMCAMPOSMODIF = 9;
         }
         /* Atributo número 5 es una coleccion: */
         if(nuevo[4].isEmpty()){
-            unaPeli.setDireccion(Arrays.asList("Sin directores conocidos"));
+            unaPeli.setDireccion(new ArrayList(Arrays.asList("Sin directores conocidos")));
         }else{
         String[] t=nuevo[4].split("\t");
-        List<String> man = Arrays.asList(t);
+        List<String> man = new ArrayList(Arrays.asList(t));
         unaPeli.setDireccion(man);
         }
         /**********/
@@ -133,10 +135,10 @@ public static final int NUMCAMPOSMODIF = 9;
         }
         /* Atributo número 9 es una coleccion: */
         if(nuevo[8].isEmpty()){
-            unaPeli.setReparto(Arrays.asList("Sin reparto conocido"));
+            unaPeli.setReparto(new ArrayList(Arrays.asList("Sin reparto conocido")));
         }else{
             String[] t = nuevo[8].split("\t");
-            unaPeli.setReparto(Arrays.asList(t));
+            unaPeli.setReparto(new ArrayList(Arrays.asList(t)));
         }
         //unaPeli.setReparto(Arrays.asList(nuevo[8]));
         /**********/

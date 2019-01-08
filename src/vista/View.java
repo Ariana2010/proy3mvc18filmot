@@ -11,6 +11,8 @@ import static com.coti.tools.Esdia.*;
 import static java.lang.System.out;
 import static java.lang.System.err;
 import static java.lang.System.exit;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 
 /**
  *
@@ -20,6 +22,9 @@ public class View {
 
     Scanner sc = new Scanner(System.in,System.getProperty("os.name").contains("Windows") ? "iso-8859-1" : "UTF-8");
     Controller control = new Controller();
+    final static String PELICULAS = "peliculas";
+    final static String DIRECTORES = "directores";
+    final static String ACTORES = "actores";
 
 public void runMenu(String _menu, String[] _opcionesMenu) {
 
@@ -55,13 +60,13 @@ public void runMenu(String _menu, String[] _opcionesMenu) {
                 }while(!volver);
                 break;
             case "2":   //Opción Películas
-                this.peliculasOpcion();
+                this.opcionPeliculas();
                 break;
             case "3":   //Opción Directores
-                this.directoresOpcion();
+                this.opcionDirectores();
                 break;
             case "4":   //Opción Actores
-                this.actoresOpcion();
+                this.opcionActores();
                 break;
             case "5":   //Opción Listados
                 String[] opcVal = {"1","2","3","q"};
@@ -74,13 +79,13 @@ public void runMenu(String _menu, String[] _opcionesMenu) {
                 do{
                     switch(opc){
                         case "1":
-                            this.listados("peliculas");
+                            this.listados(View.PELICULAS);
                             break;
                         case "2":
-                            this.listados("directores");
+                            this.listados(View.DIRECTORES);
                             break;
                         case "3":
-                            this.listados("actores");
+                            this.listados(View.ACTORES);
                             break;
                         case "q":
                             volver = this.preguntarSiSalirOrContinuar("¿Esta seguro de volver al Menú Principal?"); 
@@ -115,9 +120,9 @@ private boolean preguntarSiSalirOrContinuar(String q) {
 //=====================================================================//
 //**************************   PELICULAS  *****************************//
 //=====================================================================//  
-private void peliculasOpcion() {
+private void opcionPeliculas() {
     //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    String menu = "MENÚ PELÍCULAS:"
+    String menu = "\nMENÚ PELÍCULAS:"
                 + "\n1 -Añadir película a la colección."
                 + "\n2 -Borrar película de la colección."
                 + "\n3 -Modificar película de la colección."
@@ -139,7 +144,7 @@ private void peliculasOpcion() {
                 this.peliculaModificar();
                 break;
             case "4": //Consultar película
-                this.consultar("pelicula");
+                this.consultar(this.PELICULAS);
                 break;
             case "q": //Volver a menú principal
                 volver = this.preguntarSiSalirOrContinuar("¿Esta seguro de volver al Menú Principal?");
@@ -156,26 +161,32 @@ private void peliculaAlta(String[] _campos) {
     String [] nuevo;
     int index = 0;
     boolean done;
+  /*boolean follow = true;*/
     nuevo = new String[_campos.length];
   /*  for(int i=0;i<_campos.length;i++){
         nuevo[i] = null;
     }
     // nuevo[i] esta inicializado a null como resultado de usar el constructor.
   */
+    Arrays.fill(nuevo,""); //Asi nuevo[i] contiene una cadena vacia, así me aseguro.
     System.out.println("Por favor rellene los siguientes campos:");
     for(String s : _campos){
         if(s.startsWith("*")){  //este campo es una colección
             nuevo[index++]= this.leerColeccion(s.substring(1));
             /*follow= this.preguntarSiSalirOrContinuar("Continuar?");  //*/
-        }else{ 
+        }else{ //para campos simples.
             System.out.printf("%s: ",s);
-            nuevo[index++]= sc.nextLine();
+         /*   String input = sc.nextLine();
+            if(!input.isEmpty()){nuevo[index++]= input;}
+            else{ nuevo[index++]= ""; } */  //<-- No hay necesidad, porque:
+            nuevo[index++]= sc.nextLine(); //si se pulsa intro => asigna un cadena vacía, talque 
+                                           //nuevo[index].isEmpty retorna true. Y
+                                           //nuevo[index].length retorna 0. 
+                                           //Y sdemás Arrays.fill(nuevo,""); lo ha llenado con cadenas vacías.
             /*follow = this.preguntarSiSalirOrContinuar("Continuar?");  //*/
         }
        /*if (!follow)  break;  //*/
     }
-
-
     try {
         done = control.altaPelicula(nuevo);
     }catch (NumberFormatException e) {
@@ -194,67 +205,62 @@ private String leerColeccion(String d) {
     StringBuilder coll = new StringBuilder();
     String c;
     System.out.println("Cuando termine de introducir los valores para "
-            + "este campo pulse \"x\" y luego \"intro\", para continuar "
-            + "con el siguiente campo.");
+            + "este campo pulse solamente \"intro\", para continuar con el siguiente campo.");
     do{
         System.out.printf("%s: ",d);
         c = sc.nextLine();
-        if (!c.equals("x")) {
+        if (!c.isEmpty()) { //No agrega valores vacios en la colección.
             coll.append(c);
             coll.append("\t");
         }
-    
-    }while (!c.equals("x"));
-    if(coll.length() == 0){
-        return "";
+    }while (!c.isEmpty());
+    if(coll.length() == 0){ //Aunque la colección en sí, si puede estar vacia.
+        return coll.substring(0);
     }
     return (coll.substring(0, coll.length()-1));
 }
 
-private void peliculaBaja() {
+private void peliculaBaja() {  /*ok*/
     out.print("Indique el nombre de la película que desea eliminar de la colección: ");
     String titulo = sc.nextLine();
-    if (!control.verificarPeliculaEsta(titulo)){
-        out.print("La película \""+titulo+"\" no está en la colección");
+    if (control.verificarPeliculaEsta(titulo)){
+        control.eliminarPeliculaDeLaColección(titulo);/*ok.*/
+    }else{
+        out.println("La película \""+titulo+"\" no está en la colección");
     }
-    control.eliminarPeliculaDeLaColección(titulo);/*Comprobar que efecitvamente se realiza.*/
 }
 
 private void peliculaModificar() {
     String titulo;
     String[] camposModif = control.getCamposModificar("pelicula");
     String[] nuevoValor = new String[camposModif.length];
-    out.println("Instrucciones:\nPara cada campo modificable, introduzca su valor, si "
-            + "no desea cambiarlo pulse \"x\" y después \"intro\"");
-    out.println("Los campos modificables son los siguientes: "); 
-    for(String c:camposModif){
-        out.printf("-%s\n",c);
-    }
+    Arrays.fill(nuevoValor, ""); //asegurarme así de que hay cadenas vacias en el array.
     out.println("Por favor teclea el nombre de la película que desea modificar");
     titulo = sc.nextLine();
+    out.println("Instrucciones:\nPara cada campo modificable, introduzca su valor."
+                            + "\nSi no desea modificarlo pulse \"intro\".");
+  /*  out.println("Los campos modificables son los siguientes: "); 
+    for(String c:camposModif){
+        out.printf("-%s\n",c);
+    }*/
     if(!control.verificarPeliculaEsta(titulo)) {
         out.println("\""+titulo+"\" no esta en la colección, si desea puede añadir"
                 + "está película a la colección.");
-        exit(0);
-    }
-    out.println("Introduzca nuevos valores para:");
-    int i=0;
-    for(String c:camposModif){
-        out.printf("-%s: ",c);
-        nuevoValor[i] = sc.nextLine();
-        if(nuevoValor[i].equalsIgnoreCase("x")){
-            nuevoValor[i] = "";
+    }else{
+        out.println("Introduzca nuevos valores para:");
+        int i=0;
+        for(String c:camposModif){
+            out.printf("-%s: ",c);
+            nuevoValor[i++] = sc.nextLine();
         }
-        i++;
+        control.modificarPelicula(titulo,camposModif,nuevoValor); 
     }
-    control.modificarPelicula(titulo,camposModif,nuevoValor); /*implementar falta que
-     efectivamente realice los cambios,comprobar.*/
 }
 
 private void consultar(String consulta) {
     String cad;
     switch (consulta){
-        case "pelicula": //pedir por teclado el título de la película
+        case View.PELICULAS: //pedir por teclado el título de la película
             System.out.println("Por favor teclee el nombre de la "+consulta);
             cad = sc.nextLine();
             //recuperar sus datos
@@ -267,7 +273,7 @@ private void consultar(String consulta) {
                 System.out.println("La película no está en la colección.");
             }
                 break;
-        case "actor": //pedir nombre por teclado
+    /**/    case View.ACTORES: //pedir nombre por teclado   <-- HACER BIEN
             //recuperar peliculas de ese actor
             //recupera de las películas : el titulo, año, duración, país y género
             //pasar esos 5 argumentos en un array a una función q lo muestre en
@@ -282,15 +288,15 @@ private void consultar(String consulta) {
             System.out.println(listaPelis);
             break;
         default:
-            System.out.println("Por si acaso ;)");
+            System.out.println("Por si acaso ;):ERROR: VIEW: consultar();");
     }
 }
 //=====================================================================//
 //************************    DIRECTORES  *****************************//
 //=====================================================================//
-private void directoresOpcion() {
+private void opcionDirectores() {
     //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    String menu = "MENÚ DIRECTORES:"
+    String menu = "\nMENÚ DIRECTORES:"
                 + "\n1 -Añadir director a la colección."
                 + "\n2 -Borrar director de la colección."
                 + "\n3 -Modificar datos."
@@ -323,9 +329,9 @@ private void directoresOpcion() {
 
 //********************************************************************
 //--------------------------    ACTORES   ----------------------------
-private void actoresOpcion() {
+private void opcionActores() {
     //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    String menu = "MENÚ ACTORES:"
+    String menu = "\nMENÚ ACTORES:"
                 + "\n1 -Añadir actor a la colección."
                 + "\n2 -Borrar actor de la colección."
                 + "\n3 -Modificar datos."
@@ -348,7 +354,7 @@ private void actoresOpcion() {
                 break;
             case "4": //Consultar película actor
                 System.out.println("en obras.");
-                this.consultar("actor");
+                this.consultar(View.ACTORES);
                 break;
             case "q": //Volver a menú principal
                 volver = this.preguntarSiSalirOrContinuar("¿Esta seguro de volver al Menú Principal?");

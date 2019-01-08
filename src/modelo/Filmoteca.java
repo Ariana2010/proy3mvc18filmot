@@ -98,8 +98,8 @@ public class Filmoteca {
         this.peliculas = (List)peliculas;
     }
 
-    public Collection<Director> getDirectores() {
-        return directores;
+    public List<Director> getDirectores() {
+        return (List)directores;
     }
 
     public void setDirectores(Collection<Director> directores) {
