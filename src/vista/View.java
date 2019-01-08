@@ -18,24 +18,21 @@ import static java.lang.System.exit;
  */
 public class View {
 
-    
     Scanner sc = new Scanner(System.in,System.getProperty("os.name").contains("Windows") ? "iso-8859-1" : "UTF-8");
-            
     Controller control = new Controller();
 
-public void runMenu(String menu) {
+public void runMenu(String _menu, String[] _opcionesMenu) {
 
-    this.arranque();
+    this.arranque(); 
     String opcion;
-    String[] opciones = {"1", "2", "3", "4", "5", "q"};
     boolean salir = false;
     do {
-        opcion = readString(menu, opciones);
+        opcion = readString(_menu, _opcionesMenu);
         boolean volver = false;
         switch (opcion) {
             case "1":   //Opción Archivos
-                String op;
                 String[] opVal = {"1", "2","q"};
+                String op;
                 op = readString("MENÚ ARCHIVOS:\n"
                         + "1 -Exportar directores a directores.col\n"
                         + "2 -Exportar películas a peliculas.html\n"
@@ -52,7 +49,7 @@ public void runMenu(String menu) {
                             volver = this.preguntarSiSalirOrContinuar("¿Esta seguro de volver al Menú Principal?"); 
                             break;
                         default:
-                            err.println("\n\n NO DEBERIA ESTAR AQUI \n\n");
+                            err.println("\n\n ERROR: VIEW: runMenu(): (case:Opción Archivos): NO DEBERIA ESTAR AQUI \n\n");
                             break;    
                     }
                 }while(!volver);
@@ -61,14 +58,14 @@ public void runMenu(String menu) {
                 this.peliculasOpcion();
                 break;
             case "3":   //Opción Directores
-                this.opcionDirectores();
+                this.directoresOpcion();
                 break;
             case "4":   //Opción Actores
-                this.opcionActores();
+                this.actoresOpcion();
                 break;
             case "5":   //Opción Listados
+                String[] opcVal = {"1","2","3","q"};
                 String opc;
-                String[] opcVal = {"1", "2","q"};
                 opc = readString("MENÚ ARCHIVOS:\n"
                         + "1 -Listar películas\n"
                         + "2 -Listar directores\n"
@@ -89,7 +86,7 @@ public void runMenu(String menu) {
                             volver = this.preguntarSiSalirOrContinuar("¿Esta seguro de volver al Menú Principal?"); 
                             break;
                         default:
-                            err.println("\n\n NO DEBERIA ESTAR AQUI \n\n");
+                            err.println("\n\n ERROR: VIEW: runMenu(): (case:Opción Listados): NO DEBERIA ESTAR AQUI \n\n");
                             break;    
                     }
                 }while(!volver);
@@ -101,7 +98,7 @@ public void runMenu(String menu) {
                 }
                 break;
             default:
-                err.println("\n\n ERROR \n\n");
+                err.println("\n\n ERROR: VIEW: runMenu(): default: NO DEBERIA ESTAR AQUI \n\n");
                 break;
         }
     } while (!salir);   
@@ -126,12 +123,12 @@ private void peliculasOpcion() {
                 + "\n3 -Modificar película de la colección."
                 + "\n4 -Consultar película."
                 + "\nq -Volver a Menú Principal.\n";
-    String[] _opciones = {"1", "2", "3", "4", "q"};
-    String opSub;
+    String[] opciones = {"1", "2", "3", "4", "q"};
+    String opMenuFilms;
     boolean volver = false;
     do {
-        opSub = readString(menu, _opciones);
-        switch(opSub){
+        opMenuFilms = readString(menu, opciones);
+        switch(opMenuFilms){
             case "1": //Añadir película
                 this.peliculaAlta(control.getCAMPOS_PELICULA());
                 break;
@@ -148,28 +145,26 @@ private void peliculasOpcion() {
                 volver = this.preguntarSiSalirOrContinuar("¿Esta seguro de volver al Menú Principal?");
                 break;
             default:
-                err.println("\n\n ERROR \n\n");
+                err.println("\n\n ERROR: VIEW: peliculasOpcion(): No debería mostrar está línea. \n\n");
                 break;
         }
 
     } while(!volver); 
 }
 
-private void peliculaAlta(String[] campos) {
+private void peliculaAlta(String[] _campos) {
     String [] nuevo;
     int index = 0;
     boolean done;
-    //boolean follow = true;
-
-    nuevo = new String[campos.length];
-    for(int i=0;i<campos.length;i++){
+    nuevo = new String[_campos.length];
+  /*  for(int i=0;i<_campos.length;i++){
         nuevo[i] = null;
     }
-
+    // nuevo[i] esta inicializado a null como resultado de usar el constructor.
+  */
     System.out.println("Por favor rellene los siguientes campos:");
-    for(String s : campos){
+    for(String s : _campos){
         if(s.startsWith("*")){  //este campo es una colección
-            //System.out.printf("%s : ",s.substring(1));
             nuevo[index++]= this.leerColeccion(s.substring(1));
             /*follow= this.preguntarSiSalirOrContinuar("Continuar?");  //*/
         }else{ 
@@ -221,7 +216,6 @@ private void peliculaBaja() {
     String titulo = sc.nextLine();
     if (!control.verificarPeliculaEsta(titulo)){
         out.print("La película \""+titulo+"\" no está en la colección");
-        exit(0);
     }
     control.eliminarPeliculaDeLaColección(titulo);/*Comprobar que efecitvamente se realiza.*/
 }
@@ -278,7 +272,14 @@ private void consultar(String consulta) {
             //recupera de las películas : el titulo, año, duración, país y género
             //pasar esos 5 argumentos en un array a una función q lo muestre en
             //forma de tabla.
-            System.out.println("pendiente de implementación");
+            System.out.println("Por favor teclee el nombre del "+consulta);
+            cad = sc.nextLine();
+            //recuperar sus datos
+            String listaPelis;
+            listaPelis = control.getDatosPeliculaActor(cad);
+            //Mostrar todos sus datos
+            System.out.println(cad + " ha participado en las siguientes películas: ");
+            System.out.println(listaPelis);
             break;
         default:
             System.out.println("Por si acaso ;)");
@@ -287,7 +288,7 @@ private void consultar(String consulta) {
 //=====================================================================//
 //************************    DIRECTORES  *****************************//
 //=====================================================================//
-private void opcionDirectores() {
+private void directoresOpcion() {
     //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     String menu = "MENÚ DIRECTORES:"
                 + "\n1 -Añadir director a la colección."
@@ -322,7 +323,7 @@ private void opcionDirectores() {
 
 //********************************************************************
 //--------------------------    ACTORES   ----------------------------
-private void opcionActores() {
+private void actoresOpcion() {
     //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     String menu = "MENÚ ACTORES:"
                 + "\n1 -Añadir actor a la colección."
@@ -346,7 +347,8 @@ private void opcionActores() {
                 System.out.println("No implementada.");
                 break;
             case "4": //Consultar película actor
-                System.out.println("No implementada.");
+                System.out.println("en obras.");
+                this.consultar("actor");
                 break;
             case "q": //Volver a menú principal
                 volver = this.preguntarSiSalirOrContinuar("¿Esta seguro de volver al Menú Principal?");
