@@ -69,12 +69,12 @@ public void runMenu(String _menu, String[] _opcionesMenu) {
             case "5":   //Opción Listados
                 String[] opcVal = {"1","2","3","q"};
                 String opc;
+                do{
                 opc = readString("MENÚ ARCHIVOS:\n"
                         + "1 -Listar películas\n"
                         + "2 -Listar directores\n"
                         + "3 -Listar actores\n"
                         + "q -Volver al menú principal", opcVal);
-                do{
                     switch(opc){
                         case "1":
                             this.listados(View.PELICULAS);
