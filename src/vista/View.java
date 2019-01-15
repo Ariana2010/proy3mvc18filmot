@@ -10,8 +10,6 @@ import java.util.Scanner;
 import static com.coti.tools.Esdia.*;
 import static java.lang.System.out;
 import static java.lang.System.err;
-import static java.lang.System.exit;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 /**
@@ -374,6 +372,26 @@ private void opcionActores() {
 //=====================================================================//
 //*************************    LISTADOS  ******************************//
 //=====================================================================//
+    private void listados(String _opcion) {
+        switch (_opcion){
+            case View.ACTORES:
+                control.OrdenarPor("actor");
+                break;
+            case View.DIRECTORES:
+                control.OrdenarPor("director");
+                break;
+            case View.PELICULAS:
+                control.OrdenarPor("pelicula");
+                String[][] tabla = control.getPeliculasEnColumnas();
+                this.showListadosEncolumnados(tabla);
+                break;
+            default:
+                err.println("\n\n ERROR \n\n: View: Listados(): ¿Por qué entro aquí?");
+        }
+        //Mostrar Listado()
+        /*Despues de la accion de ordenar las listas estarán ordenadas, asi que es
+         pedir los datos y deberian retornar en orden.*/
+    }
 
 //=====================================================================//
 //**********************  ARRANQUE Y SALIDA  **************************//
@@ -392,7 +410,7 @@ private void opcionActores() {
     
 /**
  * Recibe dos arrays de string, uno con los datos de la película y otro
- * con la cabecera para los datos.
+ * con la cabecera para los datos.Igual puede usarse para cualquier otro dato.
  * @param datos
  * @param title 
  */
@@ -410,13 +428,24 @@ private void showDatos(String[] datos,String[] title) {
     }
 }
     
-    private void showListadosEncolumnados(String[] datos, String[] cabecera){
-        System.out.println("No implementada");
+    private void showListadosEncolumnados(String[][] datos){
+        StringBuilder separador = new StringBuilder();
+        int nFilas = datos.length;
+        int nCol = datos[0].length;
+        for (int  col = 0; col < nCol; col++) {
+            separador.append("+-----------------------------------");
+        }
+        separador.append("+");
+        for(int i=0; i<nFilas; i++){
+            System.out.println(separador);
+            for(int j=0; j<nCol; j++){
+                System.out.printf("| %33s ", (datos[i][j].length()>33)? datos[i][j].substring(0, 33):datos[i][j]);
+            }
+            System.out.println("|");
+        }
+        System.out.println(separador);
     }
 
-    private void listados(String opcion) {
-        System.out.println("No implementada.");
-    }
        
     
     

@@ -14,16 +14,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import static java.lang.System.err;
 import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 /**
  *
@@ -586,6 +587,50 @@ public class Model {
             }
         }
         return datos;
+    }
+
+    public void sortBy(String _opcion) {
+        Comparator<Pelicula> p;
+        Comparator<Actor> a;
+        Comparator<Director> d;
+        switch (_opcion){
+            case Filmoteca.PELICULA:
+                p = new ComparadorTitulo();
+                Collections.sort((List)fmt.getPeliculas(), p);
+                break;
+            case Filmoteca.DIRECTOR:
+
+                break;
+            case Filmoteca.ACTOR:
+
+                break;
+            default:
+                err.println("\n\n ERROR \n\n: Model: sortBy(): ¿Por qué entro aquí?");
+        }
+    }
+
+    public String[][] getFilmsOnTable() {
+        String[][] tablaP ;
+        List <Pelicula> tmp = (ArrayList) fmt.getPeliculas();
+        tablaP = new String[1+tmp.size()][5];
+        
+        tablaP[0][0] = "TITULO";
+        tablaP[0][1] = "AÑO";
+        tablaP[0][2] = "DURACION";
+        tablaP[0][3] = "PAIS";
+        tablaP[0][4] = "GENERO";
+        
+        for(int fila = 1; fila < tmp.size()+1; fila++){
+            int aux = fila - 1;
+            int col = 0;
+            tablaP[fila][col++] = tmp.get(aux).getTitulo();
+            tablaP[fila][col++] = String.valueOf(tmp.get(aux).getYear());
+            tablaP[fila][col++] = String.valueOf(tmp.get(aux).getDuracion());
+            tablaP[fila][col++] = tmp.get(aux).getPais();
+            tablaP[fila][col++] = tmp.get(aux).getGenero();
+        }
+        
+        return tablaP;
     }
    
     

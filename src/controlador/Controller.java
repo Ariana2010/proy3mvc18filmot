@@ -153,5 +153,32 @@ Model m = new Model();
          return datos;   
         }
     }
+
+    public void OrdenarPor(String _opcion) {
+        switch (_opcion){
+            case "pelicula":
+                m.sortBy(Filmoteca.PELICULA);
+                break;
+            case "director":
+                m.sortBy(Filmoteca.DIRECTOR);
+                break;
+            case "actor":
+                 m.sortBy(Filmoteca.ACTOR);
+                break;
+            default:
+                err.println("\n\n ERROR \n\n: Controller: OrdenarPor(): ¿Por qué entro aquí?");
+        }
+    }
+
+    /**
+     * 
+     * @return String[][]
+     * Los datos de las peliculas en un array bidimensional, donde la 
+     * primera fila es la cabecera de los datos.
+     */
+    
+    public String[][] getPeliculasEnColumnas() {
+        return m.getFilmsOnTable();
+    }
     
 }//End Class
