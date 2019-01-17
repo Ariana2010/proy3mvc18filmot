@@ -20,7 +20,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -256,9 +255,9 @@ public class Model {
         try{
             FileOutputStream fos = new FileOutputStream(rutaActors.toFile());
             BufferedOutputStream bos = new BufferedOutputStream(fos);
-            ObjectOutputStream oos = new ObjectOutputStream(bos);
-            oos.writeObject(tmpA);
-            oos.close();
+            try (ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+                oos.writeObject(tmpA);
+            }
         }catch (IOException ex) {
             System.out.println("No fue posible guardar el archivo");
             System.out.println(ex.toString());
@@ -311,7 +310,7 @@ public class Model {
                             System.out.println(d);
                         }
                     }
-                    if(!exist){ //el director no existe asi que no se ha agregado la pelicula a ninguna lista.
+                    if(!exist){ //el director no existe a crearlo.
                         Director cnd = new Director(name,tPeli);
                         dir.add(cnd);
                         System.out.println(cnd);
@@ -609,25 +608,28 @@ public class Model {
         }
     }
 
-    public String[][] getFilmsOnTable() {
-        String[][] tablaP ;
+    public String[][] getFilmsOnTableWithFormat() {
+        String[][] tablaP ; String cadAux;
         List <Pelicula> tmp = (ArrayList) fmt.getPeliculas();
         tablaP = new String[1+tmp.size()][5];
         
-        tablaP[0][0] = "TITULO";
-        tablaP[0][1] = "AÑO";
-        tablaP[0][2] = "DURACION";
-        tablaP[0][3] = "PAIS";
-        tablaP[0][4] = "GENERO";
+        tablaP[0][0] = String.format("%-35s","TITULO");
+        tablaP[0][1] = String.format("%6s","AÑO");
+        tablaP[0][2] = String.format("%10s","DURACION");
+        tablaP[0][3] = String.format("%-30s","PAIS");
+        tablaP[0][4] = String.format("%-20s","GENERO");
         
         for(int fila = 1; fila < tmp.size()+1; fila++){
             int aux = fila - 1;
             int col = 0;
-            tablaP[fila][col++] = tmp.get(aux).getTitulo();
-            tablaP[fila][col++] = String.valueOf(tmp.get(aux).getYear());
-            tablaP[fila][col++] = String.valueOf(tmp.get(aux).getDuracion());
-            tablaP[fila][col++] = tmp.get(aux).getPais();
-            tablaP[fila][col++] = tmp.get(aux).getGenero();
+            cadAux = tmp.get(aux).getTitulo();
+            tablaP[fila][col++] = String.format("%-35s",((cadAux.length() > 35 )? cadAux.substring(0,35): cadAux));
+            tablaP[fila][col++] = String.format("%6s",String.valueOf(tmp.get(aux).getYear()));
+            tablaP[fila][col++] = String.format("%6s min",String.valueOf(tmp.get(aux).getDuracion()));
+            cadAux = tmp.get(aux).getPais();
+            tablaP[fila][col++] = String.format("%30s",((cadAux.length() > 30 )? cadAux.substring(0,30): cadAux));
+            cadAux = tmp.get(aux).getGenero();
+            tablaP[fila][col++] = String.format("%20s",((cadAux.length() > 20 )? cadAux.substring(0,20): cadAux));
         }
         
         return tablaP;

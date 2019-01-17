@@ -432,14 +432,20 @@ private void showDatos(String[] datos,String[] title) {
         StringBuilder separador = new StringBuilder();
         int nFilas = datos.length;
         int nCol = datos[0].length;
+        
         for (int  col = 0; col < nCol; col++) {
-            separador.append("+-----------------------------------");
+            separador.append("+");
+            int largo = datos[0][col].length();
+            for(int i=0; i<=largo; i++){
+                separador.append("-");
+            }
         }
         separador.append("+");
-        for(int i=0; i<nFilas; i++){
+        for(int fil=0; fil<nFilas; fil++){
             System.out.println(separador);
-            for(int j=0; j<nCol; j++){
-                System.out.printf("| %33s ", (datos[i][j].length()>33)? datos[i][j].substring(0, 33):datos[i][j]);
+            for(int col=0; col<nCol; col++){
+                //System.out.printf("| %33s ", (datos[i][j].length()>33)? datos[i][j].substring(0, 33):datos[i][j]);
+                System.out.printf("| %s",datos[fil][col]);
             }
             System.out.println("|");
         }

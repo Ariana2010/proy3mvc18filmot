@@ -178,7 +178,7 @@ Model m = new Model();
      */
     
     public String[][] getPeliculasEnColumnas() {
-        return m.getFilmsOnTable();
+        return m.getFilmsOnTableWithFormat();
     }
     
 }//End Class
