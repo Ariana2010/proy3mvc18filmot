@@ -180,5 +180,13 @@ Model m = new Model();
     public String[][] getPeliculasEnColumnas() {
         return m.getFilmsOnTableWithFormat();
     }
+
+    public String[][] getActoresEnColumnas() {
+        return m.getActorsOnTableWithFormat();
+    }
+
+    public String[][] getDirectoresEnColumnas() {
+        return m.getDirectorsOnTableWithFormat();
+    }
     
 }//End Class

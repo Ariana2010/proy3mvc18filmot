@@ -376,14 +376,29 @@ private void opcionActores() {
         switch (_opcion){
             case View.ACTORES:
                 control.OrdenarPor("actor");
+                String[][] tablaA = control.getActoresEnColumnas();
+                System.out.println("\nACTORES ORDENADOS POR AÑO DE DEBUT"
+                        + " Y NOMBRE:");
+                System.out.println("================================================"
+                        + "====================================================");
+                this.showListadosEncolumnados(tablaA);
                 break;
             case View.DIRECTORES:
                 control.OrdenarPor("director");
+                String[][] tablaD = control.getDirectoresEnColumnas();
+                System.out.println("\nDIRECTORES ORDENADOS POR NACIONALIDAD"
+                        + " Y AÑO DE NACIMIENTO:");
+                System.out.println("================================================"
+                        + "====================================================");
+                this.showListadosEncolumnados(tablaD);
                 break;
             case View.PELICULAS:
                 control.OrdenarPor("pelicula");
-                String[][] tabla = control.getPeliculasEnColumnas();
-                this.showListadosEncolumnados(tabla);
+                String[][] tablaP = control.getPeliculasEnColumnas();
+                System.out.println("\nPELICULAS ORDENADAS POR TITULO:");
+                System.out.println("================================================"
+                        + "====================================================");
+                this.showListadosEncolumnados(tablaP);
                 break;
             default:
                 err.println("\n\n ERROR \n\n: View: Listados(): ¿Por qué entro aquí?");
