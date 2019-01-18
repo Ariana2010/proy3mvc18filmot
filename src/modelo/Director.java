@@ -23,8 +23,8 @@ public class Director implements Serializable{
     /*2*/ private LocalDate fechaNac;
     /*3*/ private String nacionalidad;
     /*4*/ private String ocupacion;
-    /*5*/ private Collection<String> _pelisDir;
-    //Valor por defecto para la fecha.
+    /*5*/ private Collection<String> pelisDirector;
+    //Valor por defecto para la fecha en formato ISO-LOCAL-DATE.
     private final static String DEFAULT_DATE = "2018-12-31";
     //DELIMITADORES
     private final static String SEPARADOR_CAMPOS = "#";
@@ -67,12 +67,12 @@ public class Director implements Serializable{
         this.ocupacion = ocupacion;
     }
 
-    public Collection<String> getPelisDir() {
-        return _pelisDir;
+    public Collection<String> getPelisDirector() {
+        return pelisDirector;
     }
 
-    public void setPelisDir(Collection<String> _pelisDir) {
-        this._pelisDir = (List)_pelisDir;
+    public void setPelisDirector(Collection<String> pelisDirector) {
+        this.pelisDirector = (List)pelisDirector;
     }
 
     public static String getSEPARADOR_CAMPOS() {
@@ -119,7 +119,7 @@ public class Director implements Serializable{
                 if(!separado[4].isEmpty()) {
                     String[] t=separado[4].split(Director.getSEPARADOR_COLL());
                     List<String> man = new ArrayList(Arrays.asList(t));
-                    unDir.setPelisDir(man);
+                    unDir.setPelisDirector(man);
                 }
             }
         }
@@ -140,7 +140,7 @@ public class Director implements Serializable{
         this.fechaNac = fechaNac;
         this.nacionalidad = nacionalidad;
         this.ocupacion = ocupacion;
-        this._pelisDir = (List)_pelisDir;
+        this.pelisDirector = (List)_pelisDir;
     }
     /**
      * Contructor por defecto, asigna la fecha por defecto 31/12/2018 en formato ISO_LOCAL_DATE.
@@ -151,7 +151,7 @@ public class Director implements Serializable{
         this.fechaNac = LocalDate.parse(Director.DEFAULT_DATE);
         this.nacionalidad = "Desconocida";
         this.ocupacion = "Director de cine";
-        this._pelisDir = new ArrayList<>(Arrays.asList("Sin títulos conocidos"));
+        this.pelisDirector = new ArrayList<>(Arrays.asList("Sin títulos conocidos"));
     }
     
     public Director(String name,String peli) {
@@ -159,7 +159,7 @@ public class Director implements Serializable{
         this.fechaNac = LocalDate.parse(Director.DEFAULT_DATE);
         this.nacionalidad = "Desconocida";
         this.ocupacion = "Director de cine";
-        this._pelisDir = new ArrayList<>(Arrays.asList(peli));
+        this.pelisDirector = new ArrayList<>(Arrays.asList(peli));
     }
     /**
      * 
@@ -172,7 +172,7 @@ public class Director implements Serializable{
         dxc[i++]=this.fechaNac.format(DateTimeFormatter.ISO_DATE);
         dxc[i++]=this.nacionalidad;
         dxc[i++]=this.ocupacion;
-        dxc[i++]=this.getCamposCol(this._pelisDir,this.SEPARADOR_COMA);
+        dxc[i++]=this.getCamposCol(this.pelisDirector,this.SEPARADOR_COMA);
         
         return dxc;
     }
@@ -199,18 +199,18 @@ public class Director implements Serializable{
     void addPelisDir(String _film) {
         //agregar a la coleccion de peliculas del director este título sino esta.
         boolean exist=false;
-        for(String pd: this._pelisDir){
+        for(String pd: this.pelisDirector){
             if(pd.equalsIgnoreCase(_film)){
                 exist=true;
             }
         }if(!exist){
-            this._pelisDir.add(_film);
+            this.pelisDirector.add(_film);
         }
     }
 
     @Override
     public String toString() {
-        return "Director{" + "Nombre=" + nombre + ", Fecha nacimiento=" + fechaNac + ", Nacionalidad=" + nacionalidad + ", Ocupacion=" + ocupacion + ", \n\tPeliculas que ha dirigido=" + _pelisDir + '}';
+        return "Director{" + "Nombre=" + nombre + ", Fecha nacimiento=" + fechaNac + ", Nacionalidad=" + nacionalidad + ", Ocupacion=" + ocupacion + ", \n\tPeliculas que ha dirigido=" + pelisDirector + '}';
     }
     
     

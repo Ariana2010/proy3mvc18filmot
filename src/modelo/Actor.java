@@ -23,12 +23,12 @@ public class Actor implements Serializable{
     /*2*/ private LocalDate fechaNac;
     /*3*/ private String nacionalidad;
     /*4*/ private int debut; //año de debut.
-    /*5*/ private List<String> _pelisAct;
+    /*5*/ private List<String> pelisActor;
     //DELIMITADORES
     private final static String SEPARADOR_CAMPOS = "#";
     private final static String SEPARADOR_COLL = "\t";
     private final static String SEPARADOR_COMA = ",";
-    //Valor por defecto para la fecha
+    //Valor por defecto para la fecha en formato ISO-LOCAL-DATE
     private final static String DEFAULT_DATE = "2018-12-31";
     //OTROS
     private final static int NUMERO_CAMPOS = 5;
@@ -67,11 +67,11 @@ public class Actor implements Serializable{
     }
 
     public Collection<String> getPelisAct() {
-        return _pelisAct;
+        return pelisActor;
     }
 
     public void setPelisAct(Collection<String> _pelisAct) {
-        this._pelisAct = (List)_pelisAct;
+        this.pelisActor = (List)_pelisAct;
     }
 
     public static String getSEPARADOR_COMA() {
@@ -96,7 +96,7 @@ public class Actor implements Serializable{
         this.fechaNac = LocalDate.parse(Actor.DEFAULT_DATE);
         this.nacionalidad = "Desconocida";
         this.debut = 0;
-        this._pelisAct = new ArrayList<>(Arrays.asList("Sin títulos conocidos"));
+        this.pelisActor = new ArrayList<>(Arrays.asList("Sin títulos conocidos"));
     }
 
     /**
@@ -112,7 +112,7 @@ public class Actor implements Serializable{
         this.fechaNac = fechaNac;
         this.nacionalidad = nacionalidad;
         this.debut = debut;
-        this._pelisAct = (List)_pelisAct;
+        this.pelisActor = (List)_pelisAct;
     }
     
     public Actor(String _name,String _tPeli) {
@@ -120,7 +120,7 @@ public class Actor implements Serializable{
         this.fechaNac = LocalDate.parse(Actor.DEFAULT_DATE);
         this.nacionalidad = "Desconocida";
         this.debut = 0;
-        this._pelisAct = new ArrayList<>(Arrays.asList(_tPeli));
+        this.pelisActor = new ArrayList<>(Arrays.asList(_tPeli));
     }
     /**
      * Método factoría para usar con el archivo de texto.
@@ -173,7 +173,7 @@ public class Actor implements Serializable{
         dxc[i++]=this.fechaNac.format(formater);
         dxc[i++]=this.nacionalidad;
         dxc[i++]=String.valueOf(this.debut);
-        dxc[i++]=this.getCamposCol(this._pelisAct,this.SEPARADOR_COMA);
+        dxc[i++]=this.getCamposCol(this.pelisActor,this.SEPARADOR_COMA);
         
         return dxc;
     }
@@ -200,12 +200,12 @@ public class Actor implements Serializable{
         void addPelisAct(String _film) {
         //agregar a la coleccion de peliculas del director este título sino esta.
         boolean exist=false;
-        for(String pd: this._pelisAct){
+        for(String pd: this.pelisActor){
             if(pd.equalsIgnoreCase(_film)){
                 exist=true;
             }
         }if(!exist){
-            this._pelisAct.add(_film);
+            this.pelisActor.add(_film);
         }
     }
 
