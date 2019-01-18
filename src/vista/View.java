@@ -376,13 +376,26 @@ private void opcionActores() {
         switch (_opcion){
             case View.ACTORES:
                 control.OrdenarPor("actor");
+                String[][] tablaA = control.getActoresEnColumnas();
+                System.out.printf("%nLISTADO ACTORES POR AÑO DEBUT Y NOMBRE%n");
+                System.out.printf("====================================================="
+                        + "==============================================================%n");
+                this.showListadosEncolumnados(tablaA);
                 break;
             case View.DIRECTORES:
                 control.OrdenarPor("director");
+                String[][] tablaD = control.getDirectoresEnColumnas();
+                System.out.printf("%nLISTADO DIRECTORES POR NACIONALIDAD Y AÑO DE NACIMIENTO%n");
+                System.out.printf("====================================================="
+                        + "==============================================================%n");
+                this.showListadosEncolumnados(tablaD);
                 break;
             case View.PELICULAS:
                 control.OrdenarPor("pelicula");
                 String[][] tabla = control.getPeliculasEnColumnas();
+                System.out.printf("%nLISTADO PELICULAS POR TITULO%n");
+                System.out.printf("====================================================="
+                        + "==============================================================%n");
                 this.showListadosEncolumnados(tabla);
                 break;
             default:

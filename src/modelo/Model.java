@@ -599,7 +599,7 @@ public class Model {
                 Collections.sort((List)fmt.getPeliculas(), p);
                 break;
             case Filmoteca.DIRECTOR:
-                d = new ComparadorDirectorNacionalidad();
+                d = new ComparadorDirectorXNacionalidad();
                 Collections.sort((List) fmt.getDirectores(),d);
                 break;
             case Filmoteca.ACTOR:
