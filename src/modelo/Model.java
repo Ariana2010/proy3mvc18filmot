@@ -599,10 +599,12 @@ public class Model {
                 Collections.sort((List)fmt.getPeliculas(), p);
                 break;
             case Filmoteca.DIRECTOR:
-
+                d = new ComparadorDirectorNacionalidad();
+                Collections.sort((List) fmt.getDirectores(),d);
                 break;
             case Filmoteca.ACTOR:
-
+                a = new ComparadorActorDebut();
+                Collections.sort((List) fmt.getActores(), a);
                 break;
             default:
                 err.println("\n\n ERROR \n\n: Model: sortBy(): ¿Por qué entro aquí?");
@@ -614,7 +616,7 @@ public class Model {
         List <Pelicula> filmsTmp = (ArrayList) fmt.getPeliculas();
         tablaP = new String[1+filmsTmp.size()][5]; // Una fila más para la cabecera
         
-        tablaP[0][0] = String.format("%-35s","TITULO");
+        tablaP[0][0] = String.format("%-50s","TITULO");
         tablaP[0][1] = String.format("%6s","AÑO");
         tablaP[0][2] = String.format("%10s","DURACION");
         tablaP[0][3] = String.format("%-30s","PAIS");
@@ -624,13 +626,13 @@ public class Model {
             int aux = fila - 1;
             int col = 0;
             cadAux = filmsTmp.get(aux).getTitulo();
-            tablaP[fila][col++] = String.format("%-35s",((cadAux.length() > 35 )? cadAux.substring(0,35): cadAux));
+            tablaP[fila][col++] = String.format("%-50s",((cadAux.length() > 50 )? cadAux.substring(0,50): cadAux));
             tablaP[fila][col++] = String.format("%6s",String.valueOf(filmsTmp.get(aux).getYear()));
             tablaP[fila][col++] = String.format("%6s min",String.valueOf(filmsTmp.get(aux).getDuracion()));
             cadAux = filmsTmp.get(aux).getPais();
-            tablaP[fila][col++] = String.format("%30s",((cadAux.length() > 30 )? cadAux.substring(0,30): cadAux));
+            tablaP[fila][col++] = String.format("%-30s",((cadAux.length() > 30 )? cadAux.substring(0,30): cadAux));
             cadAux = filmsTmp.get(aux).getGenero();
-            tablaP[fila][col++] = String.format("%20s",((cadAux.length() > 20 )? cadAux.substring(0,20): cadAux));
+            tablaP[fila][col++] = String.format("%-20s",((cadAux.length() > 20 )? cadAux.substring(0,20): cadAux));
         }
         
         return tablaP;
@@ -639,12 +641,13 @@ public class Model {
     public String[][] getDirectorsOnTableWithFormat(){
         String[][] tablaP ; String cadAux;
         List <Director> dirTmp = (ArrayList) fmt.getDirectores();
-        tablaP = new String[1+dirTmp.size()][4];
+        tablaP = new String[1+dirTmp.size()][5];
         
         tablaP[0][0] = String.format("%-35s","NOMBRE");
         tablaP[0][1] = String.format("%16s","FECHA NACIMIENTO");
         tablaP[0][2] = String.format("%-30s","NACIONALIDAD");
-        tablaP[0][4] = String.format("%-30s","OCUPACION");
+        tablaP[0][3] = String.format("%-60s","OCUPACION");
+        tablaP[0][4] = String.format("%-100s", "PELICULAS DEL DIRECTOR");
         
         for(int fila = 1; fila < dirTmp.size()+1; fila++){
             int index = fila - 1;
@@ -652,11 +655,17 @@ public class Model {
             cadAux = dirTmp.get(index).getNombre();
             tablaP[fila][col++] = String.format("%-35s",((cadAux.length() > 35 )? cadAux.substring(0,35): cadAux));
             DateTimeFormatter formater = DateTimeFormatter.ofPattern("dd/MM/uuuu");
-            tablaP[fila][col++] = String.format("%16s",(dirTmp.get(index).getFechaNac().format(formater)));
+            tablaP[fila][col++] = String.format("%-16s",(dirTmp.get(index).getFechaNac().format(formater)));
             cadAux = dirTmp.get(index).getNacionalidad();
-            tablaP[fila][col++] = String.format("%30s",(cadAux.length() > 30 )? cadAux.substring(0,30): cadAux);
+            tablaP[fila][col++] = String.format("%-30s",(cadAux.length() > 30 )? cadAux.substring(0,30): cadAux);
             cadAux = dirTmp.get(index).getOcupacion();
-            tablaP[fila][col++] = String.format("%30s",((cadAux.length() > 30 )? cadAux.substring(0,30): cadAux));
+            tablaP[fila][col++] = String.format("%-60s",((cadAux.length() > 60 )? cadAux.substring(0,60): cadAux));
+            StringBuilder lista = new StringBuilder();
+            for(String s : dirTmp.get(index).getPelisDirector()){
+                lista.append(String.format("%s,", s));
+            }
+            tablaP[fila][col] = String.format("{ %-96s }", lista.length()>96? 
+                    lista.substring(0,96):lista.substring(0, lista.length()-1));
         }
         
         return tablaP;
@@ -666,12 +675,13 @@ public class Model {
     public String[][] getActorsOnTableWithFormat(){
         String[][] tablaP ; String cadAux;
         List <Actor> actTmp = (ArrayList) fmt.getActores();
-        tablaP = new String[1+actTmp.size()][4];
+        tablaP = new String[1+actTmp.size()][5];
         
         tablaP[0][0] = String.format("%-35s","NOMBRE");
         tablaP[0][1] = String.format("%16s","FECHA NACIMIENTO");
         tablaP[0][2] = String.format("%-30s","NACIONALIDAD");
-        tablaP[0][4] = String.format("%-10s","AÑO DEBUT");
+        tablaP[0][3] = String.format("%-10s","AÑO DEBUT");
+        tablaP[0][4] = String.format("%-100s","PELICULAS DEL ACTOR");
         
         for(int fila = 1; fila < actTmp.size()+1; fila++){
             int index = fila - 1;
@@ -679,10 +689,16 @@ public class Model {
             cadAux = actTmp.get(index).getNombre();
             tablaP[fila][col++] = String.format("%-35s",((cadAux.length() > 35 )? cadAux.substring(0,35): cadAux));
             DateTimeFormatter formater = DateTimeFormatter.ofPattern("dd/MM/uuuu");
-            tablaP[fila][col++] = String.format("%16s",(actTmp.get(index).getFechaNac().format(formater)));
+            tablaP[fila][col++] = String.format("%-16s",(actTmp.get(index).getFechaNac().format(formater)));
             cadAux = actTmp.get(index).getNacionalidad();
-            tablaP[fila][col++] = String.format("%30s",(cadAux.length() > 30 )? cadAux.substring(0,30): cadAux);
-            tablaP[fila][col++] = String.format("%10s",(String.valueOf(actTmp.get(index).getDebut())));
+            tablaP[fila][col++] = String.format("%-30s",(cadAux.length() > 30 )? cadAux.substring(0,30): cadAux);
+            tablaP[fila][col++] = String.format("%-10s",(String.valueOf(actTmp.get(index).getDebut())));
+            StringBuilder lista = new StringBuilder();
+            actTmp.get(index).getPelisAct().forEach((s) -> {
+                lista.append(String.format("%s,", s));
+            });
+            tablaP[fila][col] = String.format("{ %-96s }", lista.length()>96? 
+                    lista.substring(0,96):lista.substring(0, lista.length()-1));
         }
         
         return tablaP;
