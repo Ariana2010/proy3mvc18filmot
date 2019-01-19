@@ -161,7 +161,7 @@ public static final int NUMCAMPOSMODIF = 9;
     }   
     
     public String[] getCampos(){
-        String[] pxc = new String[this.NUM_CAMPOS];
+        String[] pxc = new String[Pelicula.NUM_CAMPOS];
         int i = 0;
         pxc[i++]=this.titulo;
         pxc[i++]=String.valueOf(this.year);
@@ -176,6 +176,40 @@ public static final int NUMCAMPOSMODIF = 9;
         pxc[i++]=this.genero;
         pxc[i++]=this.sinopsis;
         return pxc;
+    }
+    
+    /**
+     * Retorna un String separado por "sep" que contiene cada uno de los Strings
+     * que conforman la colección "coll"
+     * @param coll
+     * @param sep
+     * @return 
+     */
+    private String getCamposCol(Collection<String> coll,String sep) {
+        if(coll.isEmpty()) {
+            String n = "coleccion vacía";
+            for(String c:coll){
+                n = c;
+            }
+        return n; 
+        }else{
+            StringBuilder nm = new StringBuilder();
+            ///*
+            coll.stream().map((c) -> {
+                nm.append(c);
+                return c;
+            }).forEachOrdered((_item) -> {
+                nm.append(sep);
+            });
+            //*/
+            /*
+             for(String c:coll){
+                nm.append(c);
+                nm.append(sep);
+            }
+             */
+            return nm.substring(0, nm.length()-1);
+        }
     }
 //*******************************************************************/
 // GETTERS AND SETTERS
@@ -276,44 +310,43 @@ public static final int NUMCAMPOSMODIF = 9;
     }
     
     //*******************************************************************/
-
-    /**
-     * Retorna un String separado por "sep" que contiene cada uno de los Strings
-     * que conforman la colección "coll"
-     * @param coll
-     * @param sep
-     * @return 
-     */
-    private String getCamposCol(Collection<String> coll,String sep) {
-        if(coll.isEmpty()) {
-            String n = "coleccion vacía";
-            for(String c:coll){
-                n = c;
-            }
-        return n; 
-        }else{
-            StringBuilder nm = new StringBuilder();
-            ///*
-            coll.stream().map((c) -> {
-                nm.append(c);
-                return c;
-            }).forEachOrdered((_item) -> {
-                nm.append(sep);
-            });
-            //*/
-            /*
-             for(String c:coll){
-                nm.append(c);
-                nm.append(sep);
-            }
-             */
-            return nm.substring(0, nm.length()-1);
-        }
-    }
-
     @Override
     public String toString() {
         return "Pelicula{" + "Titulo=" + titulo + ", Año=" + year + ", País=" + pais + ", Guion=" + guion + ", Directores=" + direccion + '}';
+    }
+    
+    public String descripcionHtml (){
+        String[] des = this.getCampos();
+        int i = 0;
+        String resultado;
+        resultado = String.format("<TR>"    //<tr> crea fila </tr>
+                + "<TD>%s</TD>" // 1        //<td> crea columna </td>
+                + "<TD>%s</TD>" // 2
+                + "<TD>%s</TD>" // 3
+                + "<TD>%s</TD>" // 4
+                + "<TD>%s</TD>" // 5
+                + "<TD>%s</TD>" // 6
+                + "<TD>%s</TD>" // 7
+                + "<TD>%s</TD>" // 8
+                + "<TD>%s</TD>" // 9
+                + "<TD>%s</TD>" // 10
+                + "<TD>%s</TD>" // 11
+                + "<TD>%s</TD>" // 12
+                + "</TR>",  //Cierra la fila
+                des[i++], //0 
+                des[i++], //1
+                des[i++], //2
+                des[i++], //3
+                des[i++], //4
+                des[i++], //5
+                des[i++], //6
+                des[i++], //7
+                des[i++], //8
+                des[i++], //9
+                des[i++], //10
+                des[i++] //11
+                );
+        return resultado;
     }
       
 }//End Class

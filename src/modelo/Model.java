@@ -10,10 +10,13 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import static java.lang.System.err;
 import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
@@ -25,6 +28,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -69,7 +74,7 @@ public class Model {
                 tmpPelis = (ArrayList<Pelicula>) ois.readObject();
             }
         } catch (IOException | ClassNotFoundException ex) {
-            System.out.println("No fue posible leer el archivo: "+rutaFileBinFilms);
+            System.err.println("No fue posible leer el archivo: "+rutaFileBinFilms);
             System.err.println(ex.toString());
         }
         System.out.println("Peliculas.bin : ");
@@ -126,8 +131,8 @@ public class Model {
                 tmpDirectores = (List<Director>) ois.readObject();
             }
         } catch (IOException | ClassNotFoundException ex) {
-            System.out.println("No fue posible leer el archivo"+rutaFileBinDirectors);
-            System.out.println(ex.toString());
+            System.err.println("No fue posible leer el archivo"+rutaFileBinDirectors);
+            System.err.println(ex.toString());
         }
         System.out.println("Directores.bin :");        
         for(Director x:tmpDirectores){
@@ -180,8 +185,8 @@ public class Model {
         tmpActores = (List<Actor>) ois.readObject();
         ois.close();
         } catch (IOException | ClassNotFoundException ex) {
-            System.out.println("No fue posible leer el archivo"+rutaFileBinActors);
-            System.out.println(ex.toString());
+            System.err.println("No fue posible leer el archivo"+rutaFileBinActors);
+            System.err.println(ex.toString());
         }
         System.out.println("Actores.bin :");        
         for (Actor x : tmpActores) {
@@ -266,8 +271,10 @@ public class Model {
     }//End saveFiles()
     
     private Path crearRuta(String nombreCarpeta, String nombreFichero, String ext){
-        Path p;
-        String file = nombreFichero.concat(ext);
+        Path p; String file;
+        if(!ext.isEmpty()){
+            file = nombreFichero.concat(ext);
+        }else { file = nombreFichero; }
         if (System.getProperty("os.name").startsWith("Windows")) {
             // includes: Windows 2000,  Windows 95, Windows 98, Windows NT, Windows Vista, Windows XP
             p = Rutas.pathToFileInFolderOnDesktop(nombreCarpeta, file);
@@ -700,9 +707,42 @@ public class Model {
             tablaP[fila][col] = String.format("{ %-96s }", lista.length()>96? 
                     lista.substring(0,96):lista.substring(0, lista.length()-1));
         }
-        
         return tablaP;
-        
+    }
+
+    public void exportarDatosDirectoresEnColumnas() throws FileNotFoundException {
+        //a directores.col Con formato de columna. Guardar archivo en \Flmot18 del escritorio.
+        Path rutaFilmot18;
+        rutaFilmot18 = this.crearRuta(fmt.getNameOfFolder(), fmt.getExpDirectores(), "");
+        try(PrintWriter pw = new PrintWriter(rutaFilmot18.toFile(),Charset.forName("UTF-8").toString())){
+            //pw.printf(String.format("%-10s","DIRECTORES"));
+            pw.printf("DIRECTORES");
+            String[]cabecera = fmt.getCAMPOS_DIRECTOR();
+            pw.printf(String.format("| %-35s | %-10s | %-20s | %-60s | %-100s |",cabecera[0].toUpperCase(),
+                    cabecera[1].toUpperCase(),cabecera[2].toUpperCase(),
+                    cabecera[3].toUpperCase(),cabecera[4].toUpperCase()));
+            for(Director x : fmt.getDirectores()){
+                pw.append(x.descripcionEncolumnada());
+            }
+            pw.close();
+        } catch (UnsupportedEncodingException ex) {//AÑADIDO AUTOMATICAMENTE
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void exportarDatosPeliculasTablaHtml() throws FileNotFoundException {
+        //a peliculas.html con formato de tabla. Guardar archivo en \Filmot18 del escritorio.
+        Path rutaFilmot18;
+        rutaFilmot18 = this.crearRuta(fmt.getNameOfFolder(), fmt.getExpPeliculas(), "");
+        try (PrintWriter pw = new PrintWriter(rutaFilmot18.toString())){
+            pw.printf("<!DOCTYPE><HTML>%n<HEAD><meta charset = \"UTF-8\"><H1>PELICULAS</H1></HEAD>%n<BODY> ");
+            pw.printf("<TABLE BORDER = 1>%n");
+            for (Pelicula x: fmt.getPeliculas()){
+                pw.append(x.descripcionHtml());
+            }
+            pw.print("</TABLE> </BODY> </HTML>");
+            pw.close();
+        }
     }
    
     

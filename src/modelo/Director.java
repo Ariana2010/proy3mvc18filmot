@@ -143,7 +143,7 @@ public class Director implements Serializable{
         this.pelisDirector = (List)_pelisDir;
     }
     /**
-     * Contructor por defecto, asigna la fecha por defecto 31/12/2018 en formato ISO_LOCAL_DATE.
+     * Contructor por defecto, asigna la fecha por defecto 31/12/2018 en formato ISO_LOCAL_DATE '2011-12-03'.
      * Por defecto: 2018-12-31
      */
     public Director() {
@@ -169,7 +169,7 @@ public class Director implements Serializable{
         String[] dxc = new String[Director.NUMERO_CAMPOS];
         int i = 0;
         dxc[i++]=this.nombre;
-        dxc[i++]=this.fechaNac.format(DateTimeFormatter.ISO_DATE);
+        dxc[i++]=this.fechaNac.format(DateTimeFormatter.ofPattern("dd-MM-uuuu")); 
         dxc[i++]=this.nacionalidad;
         dxc[i++]=this.ocupacion;
         dxc[i++]=this.getCamposCol(this.pelisDirector,this.SEPARADOR_COMA);
@@ -213,6 +213,12 @@ public class Director implements Serializable{
         return "Director{" + "Nombre=" + nombre + ", Fecha nacimiento=" + fechaNac + ", Nacionalidad=" + nacionalidad + ", Ocupacion=" + ocupacion + ", \n\tPeliculas que ha dirigido=" + pelisDirector + '}';
     }
     
+    public String descripcionEncolumnada(){
+        String[] des = this.getCampos();
+        String retDes = String.format("| %-35s | %-10s | %-20s | %-60s | %-100s |",
+                            des[0],des[1],des[2],des[3],des[4]);
+        return retDes;
+    }
     
     
 }

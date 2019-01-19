@@ -5,6 +5,7 @@
  */
 package controlador;
 
+import java.io.FileNotFoundException;
 import modelo.Model;
 import static java.lang.System.*;
 import java.util.Arrays;
@@ -127,12 +128,14 @@ Model m = new Model();
 
     
     //***************************************************************
-    public void exportarDirectores() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void exportarDirectores() throws FileNotFoundException {
+        //a directores.col Con formato de columna. Guardar archivo en \Filmot18 del escritorio.
+        m.exportarDatosDirectoresEnColumnas();
     }
 
-    public void exportarPeliculas() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void exportarPeliculas()  throws FileNotFoundException {
+        //a peliculas.html con formato de tabla. Guardar archivo en \Filmot18 del escritorio.
+        m.exportarDatosPeliculasTablaHtml();
     }
     
     //***************************************************************
@@ -145,12 +148,10 @@ Model m = new Model();
     }*/
 
     public String getDatosPeliculaActor(String cad) {
-        String datos = new String();
         if(m.buscarEnColecciones(cad, Filmoteca.ACTOR)){
-          return(m.getPeliculasActor(cad));  
+             return(m.getPeliculasActor(cad));  
         }else{
-         datos = "El actor no se encuentra en la colección.";
-         return datos;   
+            return ("El actor no se encuentra en la colección.");
         }
     }
 

@@ -8,6 +8,7 @@ package vista;
 import controlador.Controller;
 import java.util.Scanner;
 import static com.coti.tools.Esdia.*;
+import java.io.FileNotFoundException;
 import static java.lang.System.out;
 import static java.lang.System.err;
 import java.util.Arrays;
@@ -36,17 +37,31 @@ public void runMenu(String _menu, String[] _opcionesMenu) {
             case "1":   //Opción Archivos
                 String[] opVal = {"1", "2","q"};
                 String op;
+                do{
                 op = readString("MENÚ ARCHIVOS:\n"
                         + "1 -Exportar directores a directores.col\n"
                         + "2 -Exportar películas a peliculas.html\n"
                         + "q -Volver al menú principal", opVal);
-                do{
                     switch(op){
                         case "1":
-                            control.exportarDirectores();
+                            try{
+                                control.exportarDirectores();
+                                System.out.println("\n\tSe ha exportado directores.col a "
+                                    + "la carpeta Filmot18 del escritorio.");
+                            }catch (FileNotFoundException ex){
+                                err.printf("No fue posible crear el archivo, exception: %s , "
+                                        + "mensaje: %s.",ex.toString(),ex.getMessage());
+                            }
                             break;
                         case "2":
-                            control.exportarPeliculas();
+                            try{
+                                control.exportarPeliculas();
+                                System.out.println("\n\tSe ha exportado peliculas.html a"
+                                        + " la carpeta Filmot18 del escritorio. ");
+                            }catch (FileNotFoundException ex){
+                                err.printf("No fue posible crear el archivo, exception: %s , "
+                                        + "mensaje: %s.",ex.toString(),ex.getMessage());
+                            }
                             break;
                         case "q":
                             volver = this.preguntarSiSalirOrContinuar("¿Esta seguro de volver al Menú Principal?"); 
