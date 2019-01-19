@@ -41,9 +41,11 @@ public static final int NUMCAMPOSMODIF = 9;
 /**
  * Método factoría
  * @param lineaP
- * String con formato delimitado por # y por '\t'.
+ * String con formato delimitado por # para separar los campos 
+ * y por '\t' para separar los campos que son parte de un campo 
+ * colección.
  * @return 
- * Un objeto de la clase unaPeli.
+ * Un objeto de la clase Pelicula.
  */
     public static Pelicula factoryMethodPeliculaFromString(String lineaP)
     {
@@ -84,7 +86,14 @@ public static final int NUMCAMPOSMODIF = 9;
         return unaPeli;
     }
     
-    
+    /**
+     * Metodo factoría, crea un objeto de la clase Pelicula.
+     * @param nuevo
+     * Array de Strings con los valores para inicializar el nuevo objeto.
+     * @return
+     * Objeto de la clase Película.
+     * @throws NumberFormatException 
+     */
     public static Pelicula factoryMethodPeliculaXcampos(String[] nuevo) 
             throws NumberFormatException {
         Pelicula unaPeli = new Pelicula();

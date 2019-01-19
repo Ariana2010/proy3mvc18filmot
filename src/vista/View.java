@@ -21,9 +21,9 @@ public class View {
 
     Scanner sc = new Scanner(System.in,System.getProperty("os.name").contains("Windows") ? "iso-8859-1" : "UTF-8");
     Controller control = new Controller();
-    final static String PELICULAS = "peliculas";
-    final static String DIRECTORES = "directores";
-    final static String ACTORES = "actores";
+    final static String PELICULAS = "1";
+    final static String DIRECTORES = "2";
+    final static String ACTORES = "3";
 
 public void runMenu(String _menu, String[] _opcionesMenu) {
 
@@ -157,7 +157,7 @@ private void opcionPeliculas() {
                 this.peliculaModificar();
                 break;
             case "4": //Consultar película
-                this.consultar(this.PELICULAS);
+                this.consultar(View.PELICULAS);
                 break;
             case "q": //Volver a menú principal
                 volver = this.preguntarSiSalirOrContinuar("¿Esta seguro de volver al Menú Principal?");
@@ -251,13 +251,13 @@ private void peliculaModificar() {
     out.println("Por favor teclea el nombre de la película que desea modificar");
     titulo = sc.nextLine();
     out.println("Instrucciones:\nPara cada campo modificable, introduzca su valor."
-                            + "\nSi no desea modificarlo pulse \"intro\".");
+                            + "\n\t\tSi no desea modificarlo pulse \"intro\".");
   /*  out.println("Los campos modificables son los siguientes: "); 
     for(String c:camposModif){
         out.printf("-%s\n",c);
     }*/
     if(!control.verificarPeliculaEsta(titulo)) {
-        out.println("\""+titulo+"\" no esta en la colección, si desea puede añadir"
+        out.println("\""+titulo+"\" no esta en la colección, si desea puede añadir "
                 + "está película a la colección.");
     }else{
         out.println("Introduzca nuevos valores para:");
@@ -321,6 +321,7 @@ private void opcionDirectores() {
         opSub = readString(menu, _opciones);
         switch(opSub){
             case "1": //Añadir director
+                this.directorDarDeAltaNuevo(control.getCAMPOS_DIRECTOR());
                 System.out.println("No implementada.");
                 break;
             case "2": //Borrar director
@@ -340,6 +341,40 @@ private void opcionDirectores() {
     } while(!volver);    
 }
 
+public void directorDarDeAltaNuevo(String[] _campos){
+    String [] nuevo;
+    int index = 0;
+    boolean done;
+    nuevo = new String[_campos.length];
+    Arrays.fill(nuevo,""); //Asi nuevo[i] contiene una cadena vacia, así me aseguro.
+    System.out.println("Por favor rellene los siguientes campos:");
+    for(String s : _campos){
+        if(s.startsWith("*")){  //este campo es una colección
+            nuevo[index++]= this.leerColeccion(s.substring(1));
+        }else{ //para campos simples.
+            System.out.printf("%s: ",s);
+         /*   String input = sc.nextLine();
+            if(!input.isEmpty()){nuevo[index++]= input;}
+            else{ nuevo[index++]= ""; } */  //<-- No hay necesidad, porque:
+            nuevo[index++]= sc.nextLine(); //si se pulsa intro => asigna un cadena vacía, talque 
+                                           //nuevo[index].isEmpty retorna true. Y
+                                           //nuevo[index].length retorna 0. 
+                                           //Y además Arrays.fill(nuevo,""); lo ha llenado con cadenas vacías.
+            }
+    }
+    try {
+        done = control.altaDirector(nuevo);
+    }catch (NumberFormatException e) {
+        done = false;
+        err.println("Por favor asegurese de introducir correctamente los"
+                + "datos numéricos.\n Intentelo de nuevo.\n Excepcion : " + e.getMessage());
+    }
+    if (done) {
+        System.out.println("Se ha añadido \""+nuevo[0]+"\" a los directores");
+    }else{
+        System.out.println("No se ha podido añadir \""+nuevo[0]+"\" a los directores");
+    }
+}
 //********************************************************************
 //--------------------------    ACTORES   ----------------------------
 private void opcionActores() {

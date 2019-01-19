@@ -18,7 +18,8 @@ import java.util.List;
  * @author Catica
  */
 public class Director implements Serializable{
-    
+
+        
     /*1*/ private String nombre;
     /*2*/ private LocalDate fechaNac;
     /*3*/ private String nacionalidad;
@@ -118,6 +119,45 @@ public class Director implements Serializable{
                 /* Atributo número 5 es una coleccion de nombres de películas: */
                 if(!separado[4].isEmpty()) {
                     String[] t=separado[4].split(Director.getSEPARADOR_COLL());
+                    List<String> man = new ArrayList(Arrays.asList(t));
+                    unDir.setPelisDirector(man);
+                }
+            }
+        }
+        //System.out.println("FactoriaDirector "+unDir);
+    return unDir;
+    }
+    
+    /**
+     * 
+     * @param nuevo
+     * @return 
+     */
+    static Director instanceDirectorFromString_facMet(String[] _nuevo) {
+        Director unDir = null;
+        if(_nuevo[0].isEmpty()){
+            return null;
+            //Retorna null si la cadena del nombre es vacía.
+        }else{
+            if(_nuevo.length < Director.NUMERO_CAMPOS){
+                //return unDir; //con los valores por defecto, pero con nombre.
+                System.err.println("CLASS DIRECTOR: ERROR: Hay menos campos de los esperados");
+            }else{
+                unDir = new Director();
+                unDir.setNombre(_nuevo[0]);
+                unDir.setNombre(_nuevo[0]);
+                if(!_nuevo[1].isEmpty()){
+                    unDir.setFechaNac(LocalDate.parse(_nuevo[1]));
+                } //de lo contrario conserva la fecha por defecto.
+                if(!_nuevo[2].isEmpty()) {
+                    unDir.setNacionalidad(_nuevo[2]); 
+                }
+                if(!_nuevo[3].isEmpty()) {
+                    unDir.setOcupacion(_nuevo[3]); 
+                }
+                /* Atributo número 5 es una coleccion de nombres de películas: */
+                if(!_nuevo[4].isEmpty()) {
+                    String[] t=_nuevo[4].split(Director.getSEPARADOR_COLL());
                     List<String> man = new ArrayList(Arrays.asList(t));
                     unDir.setPelisDirector(man);
                 }

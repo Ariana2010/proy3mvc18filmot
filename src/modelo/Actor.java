@@ -162,6 +162,48 @@ public class Actor implements Serializable{
     }
     
     /**
+     * Método factoría para usar cuando se introduce un Actor nuevo desde 
+     * la línea de ordenes.
+     * @param nuevo
+     * Es una Array de Strings(Un arreglo/vector de cadenas.)
+     * @return 
+     */
+    static Actor instanceActorFromString_facMet(String[] _nuevo) 
+            throws NumberFormatException {
+        
+        Actor unActor = null;
+        if(_nuevo.length < Actor.NUMERO_CAMPOS){
+            //return null;
+            System.err.println("CLASS ACTOR: ERROR: Hay menos campos de los esperados");
+        }else{
+            if(_nuevo[0].isEmpty()){
+                return null;
+                //System.out.println("nombre actor :"+separado[0]);
+            }else{
+                unActor = new Actor();
+                unActor.setNombre(_nuevo[0]);
+            }
+            if(!_nuevo[1].isEmpty()){
+                unActor.setFechaNac(LocalDate.parse(_nuevo[1]));
+            } //de lo contrario conserva la fecha por defecto.
+            if(!_nuevo[2].isEmpty()){
+                unActor.setNacionalidad(_nuevo[2]);
+            }
+            if(!_nuevo[3].isEmpty()){
+                unActor.setDebut(Integer.parseInt(_nuevo[3]));
+            }
+            /* Atributo número 5 es una coleccion de nombres de películas: */
+            if(!_nuevo[4].isEmpty()){
+                String[] t=_nuevo[4].split(Director.getSEPARADOR_COLL());
+                List<String> man = new ArrayList(Arrays.asList(t));
+                unActor.setPelisAct(man);
+            }
+            //System.out.println("factoriaActor "+unActor);
+        }
+    return unActor;
+    }
+    
+    /**
      * 
      * @return 
      */

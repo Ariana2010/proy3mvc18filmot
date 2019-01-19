@@ -61,6 +61,20 @@ Model m = new Model();
         return res;
     }
     
+    public boolean altaDirector(String[] nuevo) {
+    boolean res=false;
+        if(nuevo[0].isEmpty()){
+            err.println("ERROR: No se puede dar de alta una Director sin nombre.");
+            return res; }
+        try {
+            m.guardarDirectorEnModelo(nuevo);
+            res = true;
+        }catch (NumberFormatException  exc ){
+            res = false;
+            throw exc;
+        }
+        return res;    
+    }
     //***************************************************************
     /**
      * 
@@ -157,13 +171,13 @@ Model m = new Model();
 
     public void OrdenarPor(String _opcion) {
         switch (_opcion){
-            case "pelicula":
+            case Filmoteca.PELICULA:
                 m.sortBy(Filmoteca.PELICULA);
                 break;
-            case "director":
+            case Filmoteca.DIRECTOR:
                 m.sortBy(Filmoteca.DIRECTOR);
                 break;
-            case "actor":
+            case Filmoteca.ACTOR:
                  m.sortBy(Filmoteca.ACTOR);
                 break;
             default:
@@ -189,4 +203,6 @@ Model m = new Model();
     public String[][] getDirectoresEnColumnas(){
         return m.getDirectorsOnTableWithFormat();
     }
+
+    
 }//End Class

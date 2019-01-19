@@ -360,7 +360,7 @@ public class Model {
     }
 
     /**
-     * Falta comprobar que efectivamente realiza los cambios.
+     * Actualiza los datos de una película.
      * @param _titulo
      * @param _modificar
      * @param _nuevoValor 
@@ -474,6 +474,31 @@ public class Model {
         }
     }*/
 
+    //************************************************************************************
+    public void guardarDirectorEnModelo(String[] nuevo) 
+        throws NumberFormatException  {
+        List<Director> tmpDirectores;
+        Director x;
+        x = Director.instanceDirectorFromString_facMet(nuevo);
+        tmpDirectores = (List) fmt.getDirectores();
+        tmpDirectores.add(x);
+        fmt.setDirectores(tmpDirectores);
+        //hasta ahi el director se ha agregado al modelo.
+        
+    }
+    
+    public void guardarActorEnModelo(String[] nuevo) 
+        throws NumberFormatException  {
+        List<Actor> tmpActores;
+        Actor x;
+        x = Actor.instanceActorFromString_facMet(nuevo);
+        tmpActores = (List) fmt.getActores();
+        tmpActores.add(x);
+        fmt.setActores(tmpActores);
+        //hasta ahi el actor se ha agregado al modelo.
+        
+    }
+    //************************************************************************************
     public boolean buscarEnColecciones(String _busca, String _donde) 
     {   
     switch (_donde){
@@ -735,8 +760,37 @@ public class Model {
         Path rutaFilmot18;
         rutaFilmot18 = this.crearRuta(fmt.getNameOfFolder(), fmt.getExpPeliculas(), "");
         try (PrintWriter pw = new PrintWriter(rutaFilmot18.toString())){
-            pw.printf("<!DOCTYPE><HTML>%n<HEAD><meta charset = \"UTF-8\"><H1>lISTADO DE PELICULAS:</H1></HEAD>%n<BODY> ");
+            pw.printf("<!DOCTYPE><HTML>%n<HEAD><meta charset = \"UTF-8\"><H1>LISTADO DE PELICULAS:</H1></HEAD>%n<BODY> ");
             pw.printf("<TABLE BORDER = 1>%n");
+            String[] des = fmt.getCAMPOS_PELICULA();
+            int i = 0;
+            pw.printf(String.format("<TR>"    //<tr> crea fila </tr>
+                + "<TD>%s</TD>" // 1        //<td> crea columna </td>
+                + "<TD>%s</TD>" // 2
+                + "<TD>%s</TD>" // 3
+                + "<TD>%s</TD>" // 4
+                + "<TD>%s</TD>" // 5
+                + "<TD>%s</TD>" // 6
+                + "<TD>%s</TD>" // 7
+                + "<TD>%s</TD>" // 8
+                + "<TD>%s</TD>" // 9
+                + "<TD>%s</TD>" // 10
+                + "<TD>%s</TD>" // 11
+                + "<TD>%s</TD>" // 12
+                + "</TR>%n",  //Cierra la fila
+                des[i++].toUpperCase(), //0 
+                des[i++].toUpperCase(), //1
+                des[i++].toUpperCase(), //2
+                des[i++].toUpperCase(), //3
+                des[i++].substring(1, des[4].length()).toUpperCase(), //4
+                des[i++].toUpperCase(), //5
+                des[i++].toUpperCase(), //6
+                des[i++].toUpperCase(), //7
+                des[i++].substring(1, des[8].length()).toUpperCase(), //8
+                des[i++].toUpperCase(), //9
+                des[i++].toUpperCase(), //10
+                des[i++].toUpperCase()  //11
+                ));
             for (Pelicula x: fmt.getPeliculas()){
                 pw.append(x.descripcionHtml());
             }
@@ -744,6 +798,8 @@ public class Model {
             pw.close();
         }
     }
+
+    
    
     
 }//End Class.
