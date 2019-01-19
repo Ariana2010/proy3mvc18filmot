@@ -344,7 +344,7 @@ public static final int NUMCAMPOSMODIF = 9;
                 des[i++], //8
                 des[i++], //9
                 des[i++], //10
-                des[i++] //11
+                des[i++]  //11
                 );
         return resultado;
     }

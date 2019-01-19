@@ -157,7 +157,7 @@ public class Actor implements Serializable{
             List<String> man = new ArrayList(Arrays.asList(t));
             unActor.setPelisAct(man);
         }
-        System.out.println("factoriaActor "+unActor);
+        //System.out.println("factoriaActor "+unActor);
     return unActor;
     }
     

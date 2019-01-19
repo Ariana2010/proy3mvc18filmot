@@ -25,6 +25,10 @@ public class ComparadorDirectorXNacionalidad implements Comparator<Director> {
             //A igual Nacionalidad retorna el orden comparando el año de nacimiento.
             int anno1 = d1.getFechaNac().getYear();
             int anno2 = d2.getFechaNac().getYear();
+            if(Integer.compare(anno2, anno1) == 0){ // para que si tienen el mismo año de nacimiento
+                                                    // salga ordenado por el nombre.
+                return d1.getNombre().compareToIgnoreCase(d2.getNombre());
+            }
             return Integer.compare(anno1, anno2);
             //return (d1.getFechaNac().compareTo(d2.getFechaNac()));
         }

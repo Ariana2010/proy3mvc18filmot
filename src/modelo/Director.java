@@ -123,7 +123,7 @@ public class Director implements Serializable{
                 }
             }
         }
-        System.out.println("FactoriaDirector "+unDir);
+        //System.out.println("FactoriaDirector "+unDir);
     return unDir;
     }
     
@@ -215,8 +215,12 @@ public class Director implements Serializable{
     
     public String descripcionEncolumnada(){
         String[] des = this.getCampos();
-        String retDes = String.format("| %-35s | %-10s | %-20s | %-60s | %-100s |",
-                            des[0],des[1],des[2],des[3],des[4]);
+        String retDes = String.format("| %-35s | %-19s | %-20s | %-70s | %-70s |%n",
+                            des[0],
+                            des[1],
+                            (des[2].length() < 20? des[2]:des[2].substring(0, 20)),
+                            (des[3].length() < 70? des[3]:des[3].substring(0, 70)),
+                            (des[4].length() < 70? des[4]:des[4].substring(0, 70)));
         return retDes;
     }
     

@@ -77,10 +77,10 @@ public class Model {
             System.err.println("No fue posible leer el archivo: "+rutaFileBinFilms);
             System.err.println(ex.toString());
         }
-        System.out.println("Peliculas.bin : ");
+        System.out.println("Peliculas.bin: Cargado correctamente ");/*
         for(Pelicula p: tmpPelis){
             System.out.println(p);
-        }
+        }*/
         //** Sino leer fichero .txt
     }else { 
         Path rutaFileTxt = crearRuta(fmt.getNameOfFolder(),fmt.getNameOfFileFilms(),fmt.getExtensiones()[1]);
@@ -134,10 +134,10 @@ public class Model {
             System.err.println("No fue posible leer el archivo"+rutaFileBinDirectors);
             System.err.println(ex.toString());
         }
-        System.out.println("Directores.bin :");        
+        System.out.println("Directores.bin: Cargado correctamente");   /*     
         for(Director x:tmpDirectores){
             System.out.println(x);
-        }
+        }*/
     }else{
         Path rutaFileTxt = crearRuta(fmt.getNameOfFolder(),fmt.getNameOfFileDirector(),fmt.getExtensiones()[1]);
         //1A.Comprobar que el fichero existe.
@@ -188,10 +188,10 @@ public class Model {
             System.err.println("No fue posible leer el archivo"+rutaFileBinActors);
             System.err.println(ex.toString());
         }
-        System.out.println("Actores.bin :");        
+        System.out.println("Actores.bin: Cargado correctamente"); /*       
         for (Actor x : tmpActores) {
             System.out.println(x);
-        }
+        }*/
     }else{
         Path rutaFileTxt = crearRuta(fmt.getNameOfFolder(),fmt.getNameOfFileActors(),fmt.getExtensiones()[1]);
         //1A.Comprobar que el fichero existe.
@@ -651,28 +651,28 @@ public class Model {
         tablaP = new String[1+dirTmp.size()][5];
         
         tablaP[0][0] = String.format("%-35s","NOMBRE");
-        tablaP[0][1] = String.format("%16s","FECHA NACIMIENTO");
-        tablaP[0][2] = String.format("%-30s","NACIONALIDAD");
-        tablaP[0][3] = String.format("%-60s","OCUPACION");
-        tablaP[0][4] = String.format("%-100s", "PELICULAS DEL DIRECTOR");
+        tablaP[0][1] = String.format("%-30s","NACIONALIDAD");
+        tablaP[0][2] = String.format("%16s","FECHA NACIMIENTO");
+        tablaP[0][3] = String.format("%-65s","OCUPACION");
+        tablaP[0][4] = String.format("%-90s","PELICULAS DEL DIRECTOR");
         
         for(int fila = 1; fila < dirTmp.size()+1; fila++){
             int index = fila - 1;
             int col = 0;
             cadAux = dirTmp.get(index).getNombre();
             tablaP[fila][col++] = String.format("%-35s",((cadAux.length() > 35 )? cadAux.substring(0,35): cadAux));
-            DateTimeFormatter formater = DateTimeFormatter.ofPattern("dd/MM/uuuu");
-            tablaP[fila][col++] = String.format("%-16s",(dirTmp.get(index).getFechaNac().format(formater)));
             cadAux = dirTmp.get(index).getNacionalidad();
             tablaP[fila][col++] = String.format("%-30s",(cadAux.length() > 30 )? cadAux.substring(0,30): cadAux);
+            DateTimeFormatter formater = DateTimeFormatter.ofPattern("dd/MM/uuuu");
+            tablaP[fila][col++] = String.format("%-16s",(dirTmp.get(index).getFechaNac().format(formater)));
             cadAux = dirTmp.get(index).getOcupacion();
-            tablaP[fila][col++] = String.format("%-60s",((cadAux.length() > 60 )? cadAux.substring(0,60): cadAux));
+            tablaP[fila][col++] = String.format("%-65s",((cadAux.length() > 65 )? cadAux.substring(0,65): cadAux));
             StringBuilder lista = new StringBuilder();
             for(String s : dirTmp.get(index).getPelisDirector()){
                 lista.append(String.format("%s,", s));
             }
-            tablaP[fila][col] = String.format("{ %-96s }", lista.length()>96? 
-                    lista.substring(0,96):lista.substring(0, lista.length()-1));
+            tablaP[fila][col] = String.format("{ %-86s }", lista.length()>84? 
+                    lista.substring(0,84):lista.substring(0, lista.length()-1));
         }
         
         return tablaP;
@@ -716,11 +716,11 @@ public class Model {
         rutaFilmot18 = this.crearRuta(fmt.getNameOfFolder(), fmt.getExpDirectores(), "");
         try(PrintWriter pw = new PrintWriter(rutaFilmot18.toFile(),Charset.forName("UTF-8").toString())){
             //pw.printf(String.format("%-10s","DIRECTORES"));
-            pw.printf("DIRECTORES");
+            pw.println(" LISTADO DE DIRECTORES:");
             String[]cabecera = fmt.getCAMPOS_DIRECTOR();
-            pw.printf(String.format("| %-35s | %-10s | %-20s | %-60s | %-100s |",cabecera[0].toUpperCase(),
+            pw.printf(String.format("| %-35s | %-19s | %-20s | %-70s | %-70s |%n",cabecera[0].toUpperCase(),
                     cabecera[1].toUpperCase(),cabecera[2].toUpperCase(),
-                    cabecera[3].toUpperCase(),cabecera[4].toUpperCase()));
+                    cabecera[3].toUpperCase(),cabecera[4].substring(1, cabecera[4].length()).toUpperCase()));
             for(Director x : fmt.getDirectores()){
                 pw.append(x.descripcionEncolumnada());
             }
@@ -735,7 +735,7 @@ public class Model {
         Path rutaFilmot18;
         rutaFilmot18 = this.crearRuta(fmt.getNameOfFolder(), fmt.getExpPeliculas(), "");
         try (PrintWriter pw = new PrintWriter(rutaFilmot18.toString())){
-            pw.printf("<!DOCTYPE><HTML>%n<HEAD><meta charset = \"UTF-8\"><H1>PELICULAS</H1></HEAD>%n<BODY> ");
+            pw.printf("<!DOCTYPE><HTML>%n<HEAD><meta charset = \"UTF-8\"><H1>lISTADO DE PELICULAS:</H1></HEAD>%n<BODY> ");
             pw.printf("<TABLE BORDER = 1>%n");
             for (Pelicula x: fmt.getPeliculas()){
                 pw.append(x.descripcionHtml());
