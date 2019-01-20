@@ -8,6 +8,7 @@ package controlador;
 import java.io.FileNotFoundException;
 import modelo.Model;
 import static java.lang.System.*;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import modelo.Pelicula;
 import modelo.Director;
@@ -69,7 +70,22 @@ Model m = new Model();
         try {
             m.guardarDirectorEnModelo(nuevo);
             res = true;
-        }catch (NumberFormatException  exc ){
+        }catch (DateTimeParseException exc){
+            res = false;
+            throw exc;
+        }
+        return res;    
+    }
+    
+    public boolean altaActor(String[] nuevo) {
+    boolean res=false;
+        if(nuevo[0].isEmpty()){
+            err.println("ERROR: No se puede dar de alta una Actor sin nombre.");
+            return res; }
+        try {
+            m.guardarActorEnModelo(nuevo);
+            res = true;
+        }catch (NumberFormatException | DateTimeParseException exc ){
             res = false;
             throw exc;
         }
@@ -92,10 +108,10 @@ Model m = new Model();
     //***************************************************************
     public String[] getCamposModificar(String _queColeccion) {
        //debe retornar los campos susceptibles de ser modificados.
-       String[] camposMof = null;
+       String[] camposMof;
        int i = 0;
        switch(_queColeccion){
-           case "pelicula":
+           case Filmoteca.PELICULA:
                //No modificables, el título y las colecciones.
                camposMof = new String[Pelicula.NUMCAMPOSMODIF];
                for (String x : this.getCAMPOS_PELICULA()){
@@ -103,28 +119,28 @@ Model m = new Model();
                    else{camposMof[i++] = x;}
                }
 /**/            System.out.println("Control. Pelicula campos modificables: "+Arrays.toString(camposMof));
-               break;
-           case "director":
+               return camposMof;
+           case Filmoteca.DIRECTOR:
                camposMof = new String[Director.NUMCAMPOSMODIF];
                for (String x : this.getCAMPOS_DIRECTOR()){
                    if(x.equals("Nombre") || x.startsWith("*")){ /*do nothing*/ }
                    else{camposMof[i++] = x;}
                }
 /**/            System.out.println("Director campos modificables: "+Arrays.toString(camposMof));               
-               break;
-           case "actor":
+               return camposMof;
+           case Filmoteca.ACTOR:
                camposMof = new String[Actor.NUMCAMPOSMODIF];
                for (String x : this.getCAMPOS_ACTOR()){
                    if(x.equals("Nombre") || x.startsWith("*")){ /*do nothing*/ }
                    else{camposMof[i++] = x;}
                }
 /**/            System.out.println("Actor campos modificables: "+Arrays.toString(camposMof)); 
-               break;
+               return camposMof;
            default:
                System.err.println("ERROR: método getCamposModificar: No debería estar aquí.");
                exit(1);        
        }
-       return camposMof;
+    return null;
     }
 
     public void modificarPelicula(String _titulo,String[] _camposModif,String[] _nuevoValor)
@@ -178,10 +194,10 @@ Model m = new Model();
                 m.sortBy(Filmoteca.DIRECTOR);
                 break;
             case Filmoteca.ACTOR:
-                 m.sortBy(Filmoteca.ACTOR);
+                m.sortBy(Filmoteca.ACTOR);
                 break;
             default:
-                err.println("\n\n ERROR \n\n: Controller: OrdenarPor(): ¿Por qué entro aquí?");
+                err.println("\n ERROR: Controller: OrdenarPor(): ¿Por qué entro aquí?");
         }
     }
 
@@ -190,8 +206,7 @@ Model m = new Model();
      * @return String[][]
      * Los datos de las peliculas en un array bidimensional, donde la 
      * primera fila es la cabecera de los datos.
-     */
-    
+     */     
     public String[][] getPeliculasEnColumnas() {
         return m.getFilmsOnTableWithFormat();
     }

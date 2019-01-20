@@ -23,6 +23,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -114,7 +115,7 @@ public class Model {
                     tmpPelis.add(x);
             }
         }
-        //fmt.setPeliculas(tmpPelis); //añadiendolo a la colección.
+        System.out.println("Peliculas.txt: Cargado correctamente ");
         }
     }
     fmt.setPeliculas(tmpPelis);
@@ -168,8 +169,8 @@ public class Model {
 /**///                    System.out.println("director x :" +x);
                 }
             }
-        //fmt.setDirectores(tmpDirectores); //añadiendolo a la colección.
         }
+        System.out.println("Directores.txt: Cargado correctamente");
     }
     fmt.setDirectores(tmpDirectores);
     //===============================================//
@@ -222,8 +223,8 @@ public class Model {
 /**///                   System.out.println("actor x :" +x);
                 }
             }
-        //fmt.setActores(tmpActores); //añadiendolo a la colección.
         }
+        System.out.println("Actores.txt: Cargado correctamente");
     }
     fmt.setActores(tmpActores);
     }//End loadFiles();
@@ -438,7 +439,7 @@ public class Model {
                 }
             }
         }
-        System.out.println(peli);
+        //System.out.println(peli);
     }
     
     /**
@@ -476,7 +477,7 @@ public class Model {
 
     //************************************************************************************
     public void guardarDirectorEnModelo(String[] nuevo) 
-        throws NumberFormatException  {
+        throws DateTimeParseException  {
         List<Director> tmpDirectores;
         Director x;
         x = Director.instanceDirectorFromString_facMet(nuevo);
@@ -488,7 +489,7 @@ public class Model {
     }
     
     public void guardarActorEnModelo(String[] nuevo) 
-        throws NumberFormatException  {
+        throws NumberFormatException, DateTimeParseException  {
         List<Actor> tmpActores;
         Actor x;
         x = Actor.instanceActorFromString_facMet(nuevo);

@@ -8,6 +8,7 @@ package modelo;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -132,12 +133,11 @@ public class Actor implements Serializable{
         String[] separado = lineaA.split(Director.getSEPARADOR_CAMPOS(),5);
         
         if(separado.length < Actor.NUMERO_CAMPOS){
-            //return null;
             System.err.println("CLASS ACTOR: ERROR: Hay menos campos de los esperados");
+            return null;
         }
         if(separado[0].isEmpty()){
             return null;
-            //System.out.println("nombre actor :"+separado[0]);
         }else{
             unActor = new Actor();
             unActor.setNombre(separado[0]);
@@ -157,7 +157,6 @@ public class Actor implements Serializable{
             List<String> man = new ArrayList(Arrays.asList(t));
             unActor.setPelisAct(man);
         }
-        //System.out.println("factoriaActor "+unActor);
     return unActor;
     }
     
@@ -169,7 +168,7 @@ public class Actor implements Serializable{
      * @return 
      */
     static Actor instanceActorFromString_facMet(String[] _nuevo) 
-            throws NumberFormatException {
+            throws NumberFormatException, DateTimeParseException {
         
         Actor unActor = null;
         if(_nuevo.length < Actor.NUMERO_CAMPOS){
@@ -215,7 +214,7 @@ public class Actor implements Serializable{
         dxc[i++]=this.fechaNac.format(formater);
         dxc[i++]=this.nacionalidad;
         dxc[i++]=String.valueOf(this.debut);
-        dxc[i++]=this.getCamposCol(this.pelisActor,this.SEPARADOR_COMA);
+        dxc[i++]=this.getCamposCol(this.pelisActor,Actor.SEPARADOR_COMA);
         
         return dxc;
     }

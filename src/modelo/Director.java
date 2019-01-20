@@ -8,6 +8,7 @@ package modelo;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -130,10 +131,11 @@ public class Director implements Serializable{
     
     /**
      * 
-     * @param nuevo
+     * @param _nuevo
      * @return 
      */
-    static Director instanceDirectorFromString_facMet(String[] _nuevo) {
+    public static Director instanceDirectorFromString_facMet(String[] _nuevo)
+        throws DateTimeParseException {
         Director unDir = null;
         if(_nuevo[0].isEmpty()){
             return null;
@@ -183,7 +185,8 @@ public class Director implements Serializable{
         this.pelisDirector = (List)_pelisDir;
     }
     /**
-     * Contructor por defecto, asigna la fecha por defecto 31/12/2018 en formato ISO_LOCAL_DATE '2011-12-03'.
+     * Contructor por defecto, asigna la fecha por defecto 31/12/2018 en formato
+     * ISO_LOCAL_DATE '2018-12-31'.
      * Por defecto: 2018-12-31
      */
     public Director() {

@@ -11,6 +11,7 @@ import static com.coti.tools.Esdia.*;
 import java.io.FileNotFoundException;
 import static java.lang.System.out;
 import static java.lang.System.err;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 
 /**
@@ -21,9 +22,9 @@ public class View {
 
     Scanner sc = new Scanner(System.in,System.getProperty("os.name").contains("Windows") ? "iso-8859-1" : "UTF-8");
     Controller control = new Controller();
-    final static String PELICULAS = "1";
-    final static String DIRECTORES = "2";
-    final static String ACTORES = "3";
+    private final static String PELICULAS = "1";
+    private final static String DIRECTORES = "2";
+    private final static String ACTORES = "3";
 
 public void runMenu(String _menu, String[] _opcionesMenu) {
 
@@ -189,7 +190,7 @@ private void peliculaAlta(String[] _campos) {
             /*follow= this.preguntarSiSalirOrContinuar("Continuar?");  //*/
         }else{ //para campos simples.
             System.out.printf("%s: ",s);
-         /*   String input = sc.nextLine();
+            /*   String input = sc.nextLine();
             if(!input.isEmpty()){nuevo[index++]= input;}
             else{ nuevo[index++]= ""; } */  //<-- No hay necesidad, porque:
             nuevo[index++]= sc.nextLine(); //si se pulsa intro => asigna un cadena vacía, talque 
@@ -274,7 +275,7 @@ private void consultar(String consulta) {
     String cad;
     switch (consulta){
         case View.PELICULAS: //pedir por teclado el título de la película
-            System.out.println("Por favor teclee el nombre de la "+consulta);
+            System.out.println("Por favor teclee el nombre de la pelicula");
             cad = sc.nextLine();
             //recuperar sus datos
             String[] pelicula;
@@ -291,7 +292,7 @@ private void consultar(String consulta) {
             //recupera de las películas : el titulo, año, duración, país y género
             //pasar esos 5 argumentos en un array a una función q lo muestre en
             //forma de tabla.
-            System.out.println("Por favor teclee el nombre del "+consulta);
+            System.out.println("Por favor teclee el nombre del actor");
             cad = sc.nextLine();
             //recuperar sus datos
             String listaPelis;
@@ -322,7 +323,6 @@ private void opcionDirectores() {
         switch(opSub){
             case "1": //Añadir director
                 this.directorDarDeAltaNuevo(control.getCAMPOS_DIRECTOR());
-                System.out.println("No implementada.");
                 break;
             case "2": //Borrar director
                 System.out.println("No implementada.");
@@ -341,7 +341,7 @@ private void opcionDirectores() {
     } while(!volver);    
 }
 
-public void directorDarDeAltaNuevo(String[] _campos){
+private void directorDarDeAltaNuevo(String[] _campos){
     String [] nuevo;
     int index = 0;
     boolean done;
@@ -353,6 +353,16 @@ public void directorDarDeAltaNuevo(String[] _campos){
             nuevo[index++]= this.leerColeccion(s.substring(1));
         }else{ //para campos simples.
             System.out.printf("%s: ",s);
+            if (s.equalsIgnoreCase("fecha de nacimiento")){
+                System.out.println("");
+                System.out.print("Dia (con dos digitos):");
+                String dia = sc.nextLine();
+                System.out.print("Mes (con dos digitos):");
+                String mes = sc.nextLine();
+                System.out.print("Año (con cuatro digitos):");
+                String year = sc.nextLine();
+                nuevo[index++] = year.concat("-".concat(mes.concat("-".concat(dia))));
+            }else{
          /*   String input = sc.nextLine();
             if(!input.isEmpty()){nuevo[index++]= input;}
             else{ nuevo[index++]= ""; } */  //<-- No hay necesidad, porque:
@@ -361,6 +371,7 @@ public void directorDarDeAltaNuevo(String[] _campos){
                                            //nuevo[index].length retorna 0. 
                                            //Y además Arrays.fill(nuevo,""); lo ha llenado con cadenas vacías.
             }
+        }
     }
     try {
         done = control.altaDirector(nuevo);
@@ -375,8 +386,9 @@ public void directorDarDeAltaNuevo(String[] _campos){
         System.out.println("No se ha podido añadir \""+nuevo[0]+"\" a los directores");
     }
 }
-//********************************************************************
-//--------------------------    ACTORES   ----------------------------
+//=====================================================================//
+//***************************   ACTORES   *****************************//
+//=====================================================================//
 private void opcionActores() {
     //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     String menu = "\nMENÚ ACTORES:"
@@ -392,7 +404,7 @@ private void opcionActores() {
         opSub = readString(menu, _opciones);
         switch(opSub){
             case "1": //Añadir actor
-                System.out.println("No implementada.");
+                this.actorDarDeAltaNuevo(control.getCAMPOS_ACTOR());
                 break;
             case "2": //Borrar actor
                 System.out.println("No implementada.");
@@ -414,18 +426,63 @@ private void opcionActores() {
 
     } while(!volver);    
 }    
-    
+  
+ private void actorDarDeAltaNuevo(String[] _campos) {
+    String [] nuevo;
+    int index = 0;
+    boolean done;
+    nuevo = new String[_campos.length];
+    Arrays.fill(nuevo,""); //Asi nuevo[i] contiene una cadena vacia, así me aseguro.
+    System.out.println("Por favor rellene los siguientes campos:");
+    for(String s : _campos){
+        if(s.startsWith("*")){  //este campo es una colección
+            nuevo[index++]= this.leerColeccion(s.substring(1));
+        }else{ //para campos simples.
+            System.out.printf("%s: ",s);
+            if (s.equalsIgnoreCase("fecha de nacimiento")){
+                System.out.println("");
+                System.out.print("Dia (con dos digitos):");
+                String dia = sc.nextLine();
+                System.out.print("Mes (con dos digitos):");
+                String mes = sc.nextLine();
+                System.out.print("Año (con cuatro digitos):");
+                String year = sc.nextLine();
+                nuevo[index++] = year.concat("-".concat(mes.concat("-".concat(dia))));
+            }else{
+         /*   String input = sc.nextLine();
+            if(!input.isEmpty()){nuevo[index++]= input;}
+            else{ nuevo[index++]= ""; } */  //<-- No hay necesidad, porque:
+            nuevo[index++]= sc.nextLine(); //si se pulsa intro => asigna un cadena vacía, talque 
+                                           //nuevo[index].isEmpty retorna true. Y
+                                           //nuevo[index].length retorna 0. 
+                                           //Y además Arrays.fill(nuevo,""); lo ha llenado con cadenas vacías.
+            }
+        }
+    }
+    try {
+        done = control.altaActor(nuevo);
+    }catch (NumberFormatException | DateTimeParseException e) {
+        done = false;
+        err.println("Por favor asegurese de introducir correctamente los"
+                + "datos numéricos.\n Intentelo de nuevo.\n Excepcion : " + e.getMessage());
+    }
+    if (done) {
+        System.out.println("Se ha añadido \""+nuevo[0]+"\" a los actores");
+    }else{
+        System.out.println("No se ha podido añadir \""+nuevo[0]+"\" a los actores");
+    }
+ }
 //=====================================================================//
 //************************    ARCHIVOS   ******************************//
 //=====================================================================//
-
+//Opción realizada en el método runMenu();
 //=====================================================================//
 //*************************    LISTADOS  ******************************//
 //=====================================================================//
     private void listados(String _opcion) {
         switch (_opcion){
             case View.ACTORES:
-                control.OrdenarPor("actor");
+                control.OrdenarPor(View.ACTORES);
                 String[][] tablaA = control.getActoresEnColumnas();
                 System.out.printf("%nLISTADO ACTORES POR AÑO DEBUT Y NOMBRE%n");
                 System.out.printf("====================================================="
@@ -433,7 +490,7 @@ private void opcionActores() {
                 this.showListadosEncolumnados(tablaA);
                 break;
             case View.DIRECTORES:
-                control.OrdenarPor("director");
+                control.OrdenarPor(View.DIRECTORES);
                 String[][] tablaD = control.getDirectoresEnColumnas();
                 System.out.printf("%nLISTADO DIRECTORES POR NACIONALIDAD Y AÑO DE NACIMIENTO%n");
                 System.out.printf("====================================================="
@@ -441,7 +498,7 @@ private void opcionActores() {
                 this.showListadosEncolumnados(tablaD);
                 break;
             case View.PELICULAS:
-                control.OrdenarPor("pelicula");
+                control.OrdenarPor(View.PELICULAS);
                 String[][] tabla = control.getPeliculasEnColumnas();
                 System.out.printf("%nLISTADO PELICULAS POR TITULO%n");
                 System.out.printf("====================================================="
@@ -456,6 +513,29 @@ private void opcionActores() {
          pedir los datos y deberian retornar en orden.*/
     }
 
+        private void showListadosEncolumnados(String[][] datos){
+        StringBuilder separador = new StringBuilder();
+        int nFilas = datos.length;
+        int nCol = datos[0].length;
+        
+        for (int  col = 0; col < nCol; col++) {
+            separador.append("+");
+            int largo = datos[0][col].length();
+            for(int i=0; i<=largo; i++){
+                separador.append("-");
+            }
+        }
+        separador.append("+");
+        for(int fil=0; fil<nFilas; fil++){
+            System.out.println(separador);
+            for(int col=0; col<nCol; col++){
+                //System.out.printf("| %33s ", (datos[i][j].length()>33)? datos[i][j].substring(0, 33):datos[i][j]);
+                System.out.printf("| %s",datos[fil][col]);
+            }
+            System.out.println("|");
+        }
+        System.out.println(separador);
+    }
 //=====================================================================//
 //**********************  ARRANQUE Y SALIDA  **************************//
 //=====================================================================//
@@ -490,31 +570,6 @@ private void showDatos(String[] datos,String[] title) {
         }
     }
 }
-    
-    private void showListadosEncolumnados(String[][] datos){
-        StringBuilder separador = new StringBuilder();
-        int nFilas = datos.length;
-        int nCol = datos[0].length;
-        
-        for (int  col = 0; col < nCol; col++) {
-            separador.append("+");
-            int largo = datos[0][col].length();
-            for(int i=0; i<=largo; i++){
-                separador.append("-");
-            }
-        }
-        separador.append("+");
-        for(int fil=0; fil<nFilas; fil++){
-            System.out.println(separador);
-            for(int col=0; col<nCol; col++){
-                //System.out.printf("| %33s ", (datos[i][j].length()>33)? datos[i][j].substring(0, 33):datos[i][j]);
-                System.out.printf("| %s",datos[fil][col]);
-            }
-            System.out.println("|");
-        }
-        System.out.println(separador);
-    }
-
        
     
     
