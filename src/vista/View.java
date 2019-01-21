@@ -303,7 +303,7 @@ private void consultar(String consulta) {
             System.out.println("Por favor teclee el nombre del actor");
             cad = sc.nextLine();
             //recuperar sus datos
-            String listaPelis;
+            String[][] listaPelis;
             listaPelis = control.getDatosPeliculaActor(cad);
             //Mostrar todos sus datos
             System.out.println(cad + " ha participado en las siguientes películas: ");
@@ -445,7 +445,6 @@ private void opcionActores() {
                 this.modificar(View.ACTORES);
                 break;
             case "4": //Consultar película actor
-                System.out.println("en obras.");
                 this.consultar(View.ACTORES);
                 break;
             case "q": //Volver a menú principal
@@ -545,29 +544,6 @@ private void opcionActores() {
          pedir los datos y deberian retornar en orden.*/
     }
 
-        private void showListadosEncolumnados(String[][] datos){
-        StringBuilder separador = new StringBuilder();
-        int nFilas = datos.length;
-        int nCol = datos[0].length;
-        
-        for (int  col = 0; col < nCol; col++) {
-            separador.append("+");
-            int largo = datos[0][col].length();
-            for(int i=0; i<=largo; i++){
-                separador.append("-");
-            }
-        }
-        separador.append("+");
-        for(int fil=0; fil<nFilas; fil++){
-            System.out.println(separador);
-            for(int col=0; col<nCol; col++){
-                //System.out.printf("| %33s ", (datos[i][j].length()>33)? datos[i][j].substring(0, 33):datos[i][j]);
-                System.out.printf("| %s",datos[fil][col]);
-            }
-            System.out.println("|");
-        }
-        System.out.println(separador);
-    }
 //=====================================================================//
 //**********************  ARRANQUE Y SALIDA  **************************//
 //=====================================================================//
@@ -603,6 +579,30 @@ private void showDatos(String[] datos,String[] title) {
     }
 }
        
+private void showListadosEncolumnados(String[][] datos){
+    StringBuilder separador = new StringBuilder();
+    int nFilas = datos.length;
+    int nCol = datos[0].length;
+
+    for (int  col = 0; col < nCol; col++) {
+        separador.append("+");
+        int largo = datos[0][col].length();
+        for(int i=0; i<=largo; i++){
+            separador.append("-");
+        }
+    }
+    separador.append("+");
+    for(int fil=0; fil<nFilas; fil++){
+        System.out.println(separador);
+        for(int col=0; col<nCol; col++){
+            //System.out.printf("| %33s ", (datos[i][j].length()>33)? datos[i][j].substring(0, 33):datos[i][j]);
+            System.out.printf("| %s",datos[fil][col]);
+        }
+        System.out.println("|");
+    }
+    System.out.println(separador);
+}
+
 private void modificar(String _coleccion){
     
     String nombre;

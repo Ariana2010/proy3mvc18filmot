@@ -26,6 +26,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -252,9 +253,9 @@ public class Model {
         try{
             FileOutputStream fos = new FileOutputStream(rutaDirectors.toFile());
             BufferedOutputStream bos = new BufferedOutputStream(fos);
-            ObjectOutputStream oos = new ObjectOutputStream(bos);
-            oos.writeObject(tmpD);
-            oos.close();
+            try (ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+                oos.writeObject(tmpD);
+            }
         }catch (IOException ex) {
             System.out.println("No fue posible guardar el archivo");
             System.out.println(ex.toString());
@@ -732,32 +733,33 @@ public class Model {
         }else{ return "false";}
     }
 
-    public String getPeliculasActor(String cad) {
-        String datos = "Sin peliculas conocidas";
+    public String[][] getPeliculasActor(String cad) {
+        String spc = "Sin peliculas conocidas";
+        String datosPelis [][] ;
         for(Actor act: fmt.getActores()){
             if(act.getNombre().equalsIgnoreCase(cad)){
                 if(act.getPelisAct().isEmpty()){
-                    return datos;
+                    datosPelis = new String[1][1];
+                    datosPelis[0][0] = spc;
+                    return datosPelis;
                 }else{
-                    StringBuilder pelis = new StringBuilder();
-                    act.getPelisAct().stream().map((p) -> {
-                        pelis.append(p);
-                        return p;
-                    }).forEachOrdered((_item) -> {
-                        pelis.append(Actor.getSEPARADOR_COMA());
-                    });
-                    /*
-                    StringBuilder pelis = new StringBuilder();
-                    for(String p:act.getPelisAct()){
-                        pelis.append(p);
-                        pelis.append(Actor.getSEPARADOR_COMA());
+                    int dim = act.getPelisAct().size()+1;
+                    datosPelis = new String[dim][5];
+                    datosPelis[0][0] = String.format("%-50s","TITULO");
+                    datosPelis[0][1] = String.format("%6s","AÑO");
+                    datosPelis[0][2] = String.format("%10s","DURACION");
+                    datosPelis[0][3] = String.format("%-30s","PAIS");
+                    datosPelis[0][4] = String.format("%-20s","GENERO");
+                    for(int i = 1; i<dim; i++){
+                        for(String p:act.getPelisAct()){
+                            datosPelis[i] = this.getFilmOnRowWithFormat(p);
+                        }
                     }
-                     */
-                    datos = pelis.substring(0, pelis.length()-1);
+                return datosPelis;
                 } 
             }
         }
-        return datos;
+        return null;
     }
 
     public void sortBy(String _opcion) {
@@ -809,6 +811,27 @@ public class Model {
         return tablaP;
     }
     
+    private String[] getFilmOnRowWithFormat(String _titulo) {
+        String cadAux;
+        String[] tablaP ; 
+        tablaP = new String[5]; 
+        Arrays.fill(tablaP,"");
+        for(Pelicula x: fmt.getPeliculas()){
+            if(x.getTitulo().equalsIgnoreCase(_titulo)){
+            cadAux = x.getTitulo();
+            tablaP[0] = String.format("%-50s",((cadAux.length() > 50 )? cadAux.substring(0,50): cadAux));
+            tablaP[1] = String.format("%6s",String.valueOf(x.getYear()));
+            tablaP[2] = String.format("%6s min",String.valueOf(x.getDuracion()));
+            cadAux = x.getPais();
+            tablaP[3] = String.format("%-30s",((cadAux.length() > 30 )? cadAux.substring(0,30): cadAux));
+            cadAux = x.getGenero();
+            tablaP[4] = String.format("%-20s",((cadAux.length() > 20 )? cadAux.substring(0,20): cadAux));
+            break;
+            }
+        }
+        return tablaP;
+    }
+    
     public String[][] getDirectorsOnTableWithFormat(){
         String[][] tablaP ; String cadAux;
         List <Director> dirTmp = (ArrayList) fmt.getDirectores();
@@ -832,9 +855,14 @@ public class Model {
             cadAux = dirTmp.get(index).getOcupacion();
             tablaP[fila][col++] = String.format("%-65s",((cadAux.length() > 65 )? cadAux.substring(0,65): cadAux));
             StringBuilder lista = new StringBuilder();
+            /*
             for(String s : dirTmp.get(index).getPelisDirector()){
                 lista.append(String.format("%s,", s));
             }
+             */
+            dirTmp.get(index).getPelisDirector().forEach((s) -> {
+                lista.append(String.format("%s,", s));
+            });
             tablaP[fila][col] = String.format("{ %-86s }", lista.length() != 0? (lista.length()>86? 
                     lista.substring(0, 86) : lista.substring(0,lista.length()-1)) : lista);
         }
@@ -930,11 +958,14 @@ public class Model {
                 des[i++].toUpperCase(), //10
                 des[i++].toUpperCase()  //11
                 ));
-            for (Pelicula x: fmt.getPeliculas()){
-                pw.append(x.descripcionHtml());
-            }
-            pw.print("</TABLE> </BODY> </HTML>");
-            pw.close();
+                /*for (Pelicula x: fmt.getPeliculas()){
+                    pw.append(x.descripcionHtml());
+                }*/
+                fmt.getPeliculas().forEach((x) -> {
+                    pw.append(x.descripcionHtml());
+                });
+                pw.print("</TABLE> </BODY> </HTML>");
+                pw.close();
         }
     }
 

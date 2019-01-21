@@ -211,12 +211,13 @@ Model m = new Model();
         }
     }*/
 
-    public String getDatosPeliculaActor(String cad) {
+    public String[][] getDatosPeliculaActor(String cad) {
         if(m.estaEnColecciones(cad, Filmoteca.ACTOR)){
              return(m.getPeliculasActor(cad));  
-        }else{
-            return ("El actor no se encuentra en la colección.");
         }
+        String[][] ret = new String[1][1];
+        ret[0][0]="El actor no se encuentra en la coleccion.";
+        return ret;
     }
 
     public void OrdenarPor(String _opcion) {
