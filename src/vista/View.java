@@ -239,6 +239,7 @@ private void peliculaBaja() {  /*ok*/
     String titulo = sc.nextLine();
     if (control.verificarPeliculaEsta(titulo)){
         control.eliminarPeliculaDeLaColección(titulo);/*ok.*/
+        System.out.println("* Se ha eliminado \""+titulo+"\" de la colección.");
     }else{
         out.println("La película \""+titulo+"\" no está en la colección");
     }
@@ -325,7 +326,17 @@ private void opcionDirectores() {
                 this.directorDarDeAltaNuevo(control.getCAMPOS_DIRECTOR());
                 break;
             case "2": //Borrar director
-                System.out.println("No implementada.");
+                System.out.print("Nombre del Director que desea borrar de la colección:");
+                String borrar = sc.nextLine();
+                String res = control.eliminarDirectorDeLaColeccion(borrar);
+                if (res.equals("true")) // se  ha borrado
+                    System.out.println("Se ha borrado "+ borrar+" de la colección.");
+                else{ 
+                    if (res.equals("false")){
+                        System.out.println("El director no se encuentra en la colección");}
+                    System.out.println("El director \""+borrar+"\" no se puede borrar de la coleccion."
+                            + "\nAún tiene las siguientes peliculas dadas de alta:\n"+res+".");
+                    }
                 break;
             case "3": //Modificar director
                 System.out.println("No implementada.");
@@ -407,7 +418,17 @@ private void opcionActores() {
                 this.actorDarDeAltaNuevo(control.getCAMPOS_ACTOR());
                 break;
             case "2": //Borrar actor
-                System.out.println("No implementada.");
+                System.out.print("Nombre del Actor que desea borrar de la colección:");
+                String borrar = sc.nextLine();
+                String res = control.eliminarActorDeLaColeccion(borrar);
+                if (res.equals("true")) // se  ha borrado
+                    System.out.println("Se ha borrado "+ borrar+" de la colección.");
+                else{ 
+                    if (res.equals("false")){
+                        System.out.println("El actor no se encuentra en la colección");}
+                    System.out.println("El actor \""+borrar+"\" no se puede borrar de la coleccion."
+                            + "\n Aún tiene las siguientes peliculas dadas de alta:\n"+res+".");
+                    }
                 break;
             case "3": //Modificar actor
                 System.out.println("No implementada.");

@@ -500,7 +500,15 @@ public class Model {
         
     }
     //************************************************************************************
-    public boolean buscarEnColecciones(String _busca, String _donde) 
+    /**
+     * 
+     * @param _busca
+     * @param _donde
+     * @return 
+     * False, si el elemento buscado (pelicula, actor, director) no se encuentra
+     * dentro de ninguna colección, de lo contrario devuelve true.
+     */
+    public boolean estaEnColecciones(String _busca, String _donde) 
     {   
     switch (_donde){
         case Filmoteca.PELICULA:
@@ -582,7 +590,8 @@ public class Model {
             }
              */
             break;
-        case Filmoteca.DIRECTOR:
+        case Filmoteca.DIRECTOR: //Borrar solo si no tiene ninguna pelicula dada
+                                // de alta en la colección de péliculas;
             fmt.getDirectores().removeIf(d -> d.getNombre().equalsIgnoreCase(_nombre));
             break;
         case Filmoteca.ACTOR:
@@ -592,6 +601,59 @@ public class Model {
             System.err.println("ERROR: MODEL.JAVA: eliminarDelModelo(): no debería estar aquí.");
             System.exit(1);
         }    
+    }
+    
+    /**
+     * comprobará que el director o actor dado se pueden borrar, e.d que no tienen
+     * películas de su colección de películas, dadas de alta en la colección de 
+     * películas.
+     * @param _busca
+     * Director o actor.
+     * @param _donde
+     * En la colección de Actores o Directores.
+     * @return 
+     * Si no posee ninguna película dada de alta, retorna el String "true", 
+     * de lo contrario retornará un String con las películas que aún están dadas de 
+     * alta para ese actor o director.
+     * "true" -- borrado seguro. => llamar a función eliminarDelModelo.
+     * "lista de peliculas" -- no se puede borrar.
+     * "false" -- si el actor o director no se encuentra en la colección correspondiente.
+     */
+    public String comprobarBorradoSeguro (String _busca, String _donde){
+        StringBuilder ret = new StringBuilder ();
+        boolean t = true;
+        if (this.estaEnColecciones(_busca, _donde)){
+            switch (_donde){
+                case Filmoteca.ACTOR: 
+                    for(Actor x: fmt.getActores()){
+                        if (x.getNombre().equalsIgnoreCase(_busca)){
+                            for(String s: x.getPelisAct()){
+                                if(this.estaEnColecciones(s, Filmoteca.PELICULA)){
+                                    ret.append(s).append(",");
+                                    t = false;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case Filmoteca.DIRECTOR: 
+                    for(Director x: fmt.getDirectores()){
+                        if (x.getNombre().equalsIgnoreCase(_busca)){
+                            for(String s: x.getPelisDirector()){
+                                if(this.estaEnColecciones(s, Filmoteca.PELICULA)){
+                                    ret.append(s).append(",");
+                                    t = false;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    err.println("ERROR: Model:comprobarBorradoSeguro():switch.");
+                    //break;
+            }
+        return (t? "true":ret.substring(0, ret.length()-1));
+        }else{ return "false";}
     }
 
     public String getPeliculasActor(String cad) {
@@ -697,8 +759,8 @@ public class Model {
             for(String s : dirTmp.get(index).getPelisDirector()){
                 lista.append(String.format("%s,", s));
             }
-            tablaP[fila][col] = String.format("{ %-86s }", lista.length()>84? 
-                    lista.substring(0,84):lista.substring(0, lista.length()-1));
+            tablaP[fila][col] = String.format("{ %-86s }", lista.length() != 0? (lista.length()>86? 
+                    lista.substring(0, 86) : lista.substring(0,lista.length()-1)) : lista);
         }
         
         return tablaP;
@@ -730,8 +792,8 @@ public class Model {
             actTmp.get(index).getPelisAct().forEach((s) -> {
                 lista.append(String.format("%s,", s));
             });
-            tablaP[fila][col] = String.format("{ %-96s }", lista.length()>96? 
-                    lista.substring(0,96):lista.substring(0, lista.length()-1));
+            tablaP[fila][col] = String.format("{ %-96s }", lista.length() !=0? (lista.length()>96? 
+                    lista.substring(0,96):lista.substring(0, lista.length()-1)): lista);
         }
         return tablaP;
     }

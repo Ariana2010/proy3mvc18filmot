@@ -149,14 +149,28 @@ Model m = new Model();
     }
 
     public boolean verificarPeliculaEsta(String titulo) {
-        return (m.buscarEnColecciones(titulo, Filmoteca.PELICULA));
+        return (m.estaEnColecciones(titulo, Filmoteca.PELICULA));
     }
 
     public void eliminarPeliculaDeLaColección(String titulo) {
         m.eliminarDelModelo(titulo,Filmoteca.PELICULA);
     }
 
+    public String eliminarActorDeLaColeccion (String _nombre){
+        String res = m.comprobarBorradoSeguro(_nombre, Filmoteca.ACTOR);
+        if (res.equals("true")){
+            m.eliminarDelModelo(_nombre, Filmoteca.ACTOR);
+            return "true";
+        }else{ return res; }
+    }
     
+    public String eliminarDirectorDeLaColeccion (String _nombre){
+        String res = m.comprobarBorradoSeguro(_nombre, Filmoteca.DIRECTOR);
+        if (res.equals("true")){
+            m.eliminarDelModelo(_nombre, Filmoteca.DIRECTOR);
+            return "true";
+        }else{ return res; }
+    }
     //***************************************************************
     public void exportarDirectores() throws FileNotFoundException {
         //a directores.col Con formato de columna. Guardar archivo en \Filmot18 del escritorio.
@@ -178,7 +192,7 @@ Model m = new Model();
     }*/
 
     public String getDatosPeliculaActor(String cad) {
-        if(m.buscarEnColecciones(cad, Filmoteca.ACTOR)){
+        if(m.estaEnColecciones(cad, Filmoteca.ACTOR)){
              return(m.getPeliculasActor(cad));  
         }else{
             return ("El actor no se encuentra en la colección.");

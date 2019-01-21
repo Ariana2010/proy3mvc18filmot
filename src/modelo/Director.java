@@ -170,6 +170,19 @@ public class Director implements Serializable{
     }
     
     /**
+     * Contructor por defecto, asigna la fecha por defecto 31/12/2018 en formato
+     * ISO_LOCAL_DATE '2018-12-31'.
+     * Por defecto: 2018-12-31
+     */
+    public Director() {
+        this.nombre = "";
+        this.fechaNac = LocalDate.parse(Director.DEFAULT_DATE);
+        this.nacionalidad = "Desconocida";
+        this.ocupacion = "Director de cine";
+        this.pelisDirector = new ArrayList<>(Arrays.asList("Sin títulos conocidos"));
+    }
+    
+    /**
      * Constructor con paramétros.
      * @param nombre
      * @param fechaNac
@@ -183,18 +196,6 @@ public class Director implements Serializable{
         this.nacionalidad = nacionalidad;
         this.ocupacion = ocupacion;
         this.pelisDirector = (List)_pelisDir;
-    }
-    /**
-     * Contructor por defecto, asigna la fecha por defecto 31/12/2018 en formato
-     * ISO_LOCAL_DATE '2018-12-31'.
-     * Por defecto: 2018-12-31
-     */
-    public Director() {
-        this.nombre = "";
-        this.fechaNac = LocalDate.parse(Director.DEFAULT_DATE);
-        this.nacionalidad = "Desconocida";
-        this.ocupacion = "Director de cine";
-        this.pelisDirector = new ArrayList<>(Arrays.asList("Sin títulos conocidos"));
     }
     
     public Director(String name,String peli) {
