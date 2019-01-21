@@ -218,8 +218,8 @@ private void peliculaAlta(String[] _campos) {
 private String leerColeccion(String d) {
     StringBuilder coll = new StringBuilder();
     String c;
-    System.out.println("Cuando termine de introducir los valores para "
-            + "este campo pulse solamente \"intro\", para continuar con el siguiente campo.");
+    System.out.println("Por favor, introduzca un valor cada vez. "
+            + "Para terminar y continuar con el siguiente campo pulse \"intro\".");
     do{
         System.out.printf("%s: ",d);
         c = sc.nextLine();
@@ -247,7 +247,7 @@ private void peliculaBaja() {  /*ok*/
 
 private void peliculaModificar() {
     String titulo;
-    String[] camposModif = control.getCamposModificar("pelicula");
+    String[] camposModif = control.getCamposModificar(View.PELICULAS);
     String[] nuevoValor = new String[camposModif.length];
     Arrays.fill(nuevoValor, ""); //asegurarme así de que hay cadenas vacias en el array.
     out.println("Por favor teclea el nombre de la película que desea modificar");
@@ -268,7 +268,14 @@ private void peliculaModificar() {
             out.printf("-%s: ",c);
             nuevoValor[i++] = sc.nextLine();
         }
-        control.modificarPelicula(titulo,camposModif,nuevoValor); 
+        try{
+            control.modificarPelicula(titulo,camposModif,nuevoValor); 
+            System.out.println(" La pelicula \""+ titulo +"\" se ha actualizado");
+        }catch(NumberFormatException e){
+            err.println("La película no se ha podido actualizar, Intentelo de nuevo y "
+                    + "asegurese de introducir en el formato correcto los datos.\n"
+                    + "error message: "+e.getMessage());
+        }
     }
 }
 
@@ -333,13 +340,15 @@ private void opcionDirectores() {
                     System.out.println("Se ha borrado "+ borrar+" de la colección.");
                 else{ 
                     if (res.equals("false")){
-                        System.out.println("El director no se encuentra en la colección");}
+                        System.out.println("El director no se encuentra en la colección");
+                    }else{
                     System.out.println("El director \""+borrar+"\" no se puede borrar de la coleccion."
                             + "\nAún tiene las siguientes peliculas dadas de alta:\n"+res+".");
                     }
+                }
                 break;
             case "3": //Modificar director
-                System.out.println("No implementada.");
+                this.modificar(View.DIRECTORES);
                 break;
             case "q": //Volver a menú principal
                 volver = this.preguntarSiSalirOrContinuar("¿Esta seguro de volver al Menú Principal?");
@@ -425,13 +434,15 @@ private void opcionActores() {
                     System.out.println("Se ha borrado "+ borrar+" de la colección.");
                 else{ 
                     if (res.equals("false")){
-                        System.out.println("El actor no se encuentra en la colección");}
-                    System.out.println("El actor \""+borrar+"\" no se puede borrar de la coleccion."
+                        System.out.println("El actor no se encuentra en la colección.");
+                    }else{
+                        System.out.println("El actor \""+borrar+"\" no se puede borrar de la coleccion."
                             + "\n Aún tiene las siguientes peliculas dadas de alta:\n"+res+".");
                     }
+                }
                 break;
             case "3": //Modificar actor
-                System.out.println("No implementada.");
+                this.modificar(View.ACTORES);
                 break;
             case "4": //Consultar película actor
                 System.out.println("en obras.");
@@ -592,7 +603,78 @@ private void showDatos(String[] datos,String[] title) {
     }
 }
        
+private void modificar(String _coleccion){
     
+    String nombre;
+    switch(_coleccion){
+        case View.DIRECTORES:
+            out.println("Por favor teclea el nombre del director que desea modificar");
+            nombre = sc.nextLine();
+            if(!control.verificarDirectorEsta(nombre)) {
+                out.println("\""+nombre+"\" no esta en la colección, si desea puede añadir "
+                                                           + "este director a la colección.");
+            }else{
+                out.println("INSTRUCCIONES:\nPara cada campo modificable, introduzca su valor."
+                                           + " Si no desea modificarlo pulse \"intro\".");
+                String[] camposModif = control.getCamposModificar(View.DIRECTORES);
+                String[] nuevoValor = new String[camposModif.length];
+                Arrays.fill(nuevoValor, ""); //asegurarme así de que hay cadenas vacias en el array.
+                out.println("Introduzca nuevos valores para:");
+                int i=0;
+                for(String c:camposModif){
+                    if(c.equalsIgnoreCase("fecha de nacimiento")){
+                        System.out.println("formato para la fecha: año-mes-dia (con dos digitos para el mes y el dia)");
+                    }
+                    out.printf("-%s: ",c);
+                    nuevoValor[i++] = sc.nextLine();
+                }
+                try{
+                    control.modificarDirector(nombre,camposModif,nuevoValor); 
+                    System.out.println("El director \""+ nombre +"\" se ha actualizado correctamente.");
+                }catch(DateTimeParseException e){
+                    err.println("El director no se ha podido actualizar, Intentelo de nuevo y "
+                            + "asegurese de introducir en el formato correcto los datos.\n"
+                            + "error message: "+e.getMessage());
+                }
+            }
+            break;
+        case View.ACTORES:
+            out.println("Por favor teclea el nombre del director que desea modificar");
+            nombre = sc.nextLine();
+            if(!control.verificarActorEsta(nombre)) {
+                out.println("\""+nombre+"\" no esta en la colección, si desea puede añadir "
+                                                           + "este actor a la colección.");
+            }else{
+                out.println("Instrucciones:\nPara cada campo modificable, introduzca su valor."
+                                           + "\n\t\t\tSi no desea modificarlo pulse \"intro\".");
+                String[] camposModif = control.getCamposModificar(View.ACTORES);
+                String[] nuevoValor = new String[camposModif.length];
+                Arrays.fill(nuevoValor, ""); //asegurarme así de que hay cadenas vacias en el array.
+                out.println("Introduzca nuevos valores para:");
+                int i=0;
+                for(String c:camposModif){
+                    if(c.equalsIgnoreCase("fecha de nacimiento")){
+                        System.out.println("formato para la fecha: año-mes-dia (con dos digitos para el mes y el dia)");
+                    }
+                    out.printf("-%s: ",c);
+                    nuevoValor[i++] = sc.nextLine();
+                }
+                try{
+                    control.modificarActor(nombre,camposModif,nuevoValor); control.modificarDirector(nombre,camposModif,nuevoValor); 
+                    System.out.println("El cctor \""+ nombre +"\" se ha actualizado correctamente.");
+                }catch(DateTimeParseException | NumberFormatException e){
+                    err.println("El director no se ha podido actualizar, Intentelo de nuevo y "
+                            + "asegurese de introducir en el formato correcto los datos.\n"
+                            + "error message: "+e.getMessage());
+                }
+            }
+            break;
+        default:
+            System.out.println("ERROR:View:modificar().");
+    }
+
+    
+}
     
     
 }//End Class

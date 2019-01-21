@@ -121,6 +121,7 @@ Model m = new Model();
 /**/            System.out.println("Control. Pelicula campos modificables: "+Arrays.toString(camposMof));
                return camposMof;
            case Filmoteca.DIRECTOR:
+               //No modificables, el nombre y las colecciones.
                camposMof = new String[Director.NUMCAMPOSMODIF];
                for (String x : this.getCAMPOS_DIRECTOR()){
                    if(x.equals("Nombre") || x.startsWith("*")){ /*do nothing*/ }
@@ -129,6 +130,7 @@ Model m = new Model();
 /**/            System.out.println("Director campos modificables: "+Arrays.toString(camposMof));               
                return camposMof;
            case Filmoteca.ACTOR:
+               //No modificables, el nombre y las colecciones.
                camposMof = new String[Actor.NUMCAMPOSMODIF];
                for (String x : this.getCAMPOS_ACTOR()){
                    if(x.equals("Nombre") || x.startsWith("*")){ /*do nothing*/ }
@@ -144,14 +146,32 @@ Model m = new Model();
     }
 
     public void modificarPelicula(String _titulo,String[] _camposModif,String[] _nuevoValor)
-    {
+        throws NumberFormatException {
         m.actualizarDatosPelicula(_titulo,_camposModif,_nuevoValor); 
+    }
+    
+    public void modificarDirector(String _nombre,String[] _camposModif,String[] _nuevoValor)
+        throws DateTimeParseException {
+        m.actualizarDatosDirector(_nombre,_camposModif,_nuevoValor); 
+    }
+    
+    public void modificarActor(String _nombre,String[] _camposModif,String[] _nuevoValor)
+        throws NumberFormatException, DateTimeParseException {
+        m.actualizarDatosActor(_nombre,_camposModif,_nuevoValor); 
     }
 
     public boolean verificarPeliculaEsta(String titulo) {
         return (m.estaEnColecciones(titulo, Filmoteca.PELICULA));
     }
 
+    public boolean verificarDirectorEsta(String titulo) {
+        return (m.estaEnColecciones(titulo, Filmoteca.DIRECTOR));
+    }
+    
+    public boolean verificarActorEsta(String titulo) {
+        return (m.estaEnColecciones(titulo, Filmoteca.ACTOR));
+    }
+    
     public void eliminarPeliculaDeLaColección(String titulo) {
         m.eliminarDelModelo(titulo,Filmoteca.PELICULA);
     }

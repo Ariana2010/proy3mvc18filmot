@@ -22,6 +22,7 @@ import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -366,7 +367,8 @@ public class Model {
      * @param _modificar
      * @param _nuevoValor 
      */
-    public void actualizarDatosPelicula(String _titulo,String[] _modificar,String[] _nuevoValor){
+    public void actualizarDatosPelicula(String _titulo,String[] _modificar,String[] _nuevoValor)
+        throws NumberFormatException {
         Pelicula peli = fmt.getUnaPeliculaPorTitulo(_titulo);
  /**/       System.out.println(peli);
         int i=0;
@@ -443,6 +445,86 @@ public class Model {
     }
     
     /**
+     * Actualiza los datos de un Director.
+     * @param _nombre
+     * @param _modificar
+     * @param _nuevoValor 
+     */
+    public void actualizarDatosDirector(String _nombre,String[] _modificar,String[] _nuevoValor)
+        throws DateTimeParseException {
+        Director dct = fmt.getUnDirectorPorNombre(_nombre);
+ /**/       System.out.println(dct);
+        int i=0;
+        for(String modif:_modificar){
+            if(modif.equalsIgnoreCase("fecha de nacimiento")){
+                if(!_nuevoValor[i].isEmpty()){
+                    dct.setFechaNac(LocalDate.parse(_nuevoValor[i]));
+                    i++;
+                }
+                else
+                    i++;
+            }
+            if(modif.equalsIgnoreCase("nacionalidad")){
+                if(!_nuevoValor[i].isEmpty()){
+                    dct.setNacionalidad(_nuevoValor[i]);
+                    i++;
+                }
+                else
+                    i++;
+            }
+            if(modif.equalsIgnoreCase("ocupación")){
+                if(!_nuevoValor[i].isEmpty()){
+                    dct.setOcupacion(_nuevoValor[i]);
+                    i++;
+                }
+                else
+                    i++;
+            }
+        }
+        System.out.println(dct);
+    }
+    
+    /**
+     * Actualiza los datos de un actor.
+     * @param _nombre
+     * @param _modificar
+     * @param _nuevoValor 
+     */
+    public void actualizarDatosActor(String _nombre,String[] _modificar,String[] _nuevoValor)
+        throws NumberFormatException, DateTimeParseException {
+         Actor act = fmt.getUnActorPorNombre(_nombre);
+ /**/       System.out.println(act);
+        int i=0;
+        for(String modif:_modificar){
+            if(modif.equalsIgnoreCase("fecha de nacimiento")){
+                if(!_nuevoValor[i].isEmpty()){
+                    act.setFechaNac(LocalDate.parse(_nuevoValor[i]));
+                    i++;
+                }
+                else
+                    i++;
+            }
+            if(modif.equalsIgnoreCase("nacionalidad")){
+                if(!_nuevoValor[i].isEmpty()){
+                    act.setNacionalidad(_nuevoValor[i]);
+                    i++;
+                }
+                else
+                    i++;
+            }
+            if(modif.equalsIgnoreCase("año debut")){
+                if(!_nuevoValor[i].isEmpty()){
+                    act.setDebut(Integer.parseInt(_nuevoValor[i]));
+                    i++;
+                }
+                else
+                    i++;
+            }
+        }
+        System.out.println(act);
+    }
+//******************************************************************************
+    /**
      * 
      * @param cad
      * @return 
@@ -516,13 +598,11 @@ public class Model {
                 return true;
             }
             return false;
-            //break;
         case Filmoteca.DIRECTOR:
             if (fmt.getDirectores().stream().anyMatch((x) -> (x.getNombre().equalsIgnoreCase(_busca)))) {
                 return true;
             }
             return false;
-            //break;
         case Filmoteca.ACTOR:
             boolean ret = false;
             for(Actor x : fmt.getActores()){
@@ -531,13 +611,9 @@ public class Model {
                     ret =true;
                 }
             }
-        //    fmt.getActores().forEach((x) -> {
-        //        System.out.println("\t"+x.getNombre());    });
-        //    System.out.println(ret);
             return ret;
-            //break;
         default:
-            System.err.println("ERROR: MÉTODO del modelo: buscarEnColecciones: no debería estar aquí.");
+            System.err.println("ERROR: MÉTODO del modelo: estaEnColecciones: no debería estar aquí.");
             return false;
         }
     }
