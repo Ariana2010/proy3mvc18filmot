@@ -461,25 +461,19 @@ public class Model {
                 if(!_nuevoValor[i].isEmpty()){
                     dct.setFechaNac(LocalDate.parse(_nuevoValor[i]));
                     i++;
-                }
-                else
-                    i++;
+                }else{i++;}
             }
             if(modif.equalsIgnoreCase("nacionalidad")){
                 if(!_nuevoValor[i].isEmpty()){
                     dct.setNacionalidad(_nuevoValor[i]);
                     i++;
-                }
-                else
-                    i++;
+                }else{i++;}
             }
             if(modif.equalsIgnoreCase("ocupación")){
                 if(!_nuevoValor[i].isEmpty()){
                     dct.setOcupacion(_nuevoValor[i]);
                     i++;
-                }
-                else
-                    i++;
+                }else{i++;}
             }
         }
         System.out.println(dct);
@@ -750,10 +744,9 @@ public class Model {
                     datosPelis[0][2] = String.format("%10s","DURACION");
                     datosPelis[0][3] = String.format("%-30s","PAIS");
                     datosPelis[0][4] = String.format("%-20s","GENERO");
-                    for(int i = 1; i<dim; i++){
-                        for(String p:act.getPelisAct()){
-                            datosPelis[i] = this.getFilmOnRowWithFormat(p);
-                        }
+                    int i = 1;
+                    for(String p:act.getPelisAct()){
+                            datosPelis[i++] = this.getFilmOnRowWithFormat(p);
                     }
                 return datosPelis;
                 } 
@@ -826,7 +819,7 @@ public class Model {
             tablaP[3] = String.format("%-30s",((cadAux.length() > 30 )? cadAux.substring(0,30): cadAux));
             cadAux = x.getGenero();
             tablaP[4] = String.format("%-20s",((cadAux.length() > 20 )? cadAux.substring(0,20): cadAux));
-            break;
+            return tablaP;
             }
         }
         return tablaP;

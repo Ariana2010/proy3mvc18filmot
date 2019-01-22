@@ -39,7 +39,7 @@ public void runMenu(String _menu, String[] _opcionesMenu) {
                 String[] opVal = {"1", "2","q"};
                 String op;
                 do{
-                op = readString("MENÚ ARCHIVOS:\n"
+                op = readString("\nMENÚ ARCHIVOS:\n"
                         + "1 -Exportar directores a directores.col\n"
                         + "2 -Exportar películas a peliculas.html\n"
                         + "q -Volver al menú principal", opVal);
@@ -47,8 +47,8 @@ public void runMenu(String _menu, String[] _opcionesMenu) {
                         case "1":
                             try{
                                 control.exportarDirectores();
-                                System.out.println("\n\tSe ha exportado directores.col a "
-                                    + "la carpeta Filmot18 del escritorio.");
+                                System.out.println("\n* Se ha creado \"directores.col\" en "
+                                    + "la carpeta Filmot18 del escritorio.\n");
                             }catch (FileNotFoundException ex){
                                 err.printf("No fue posible crear el archivo, exception: %s , "
                                         + "mensaje: %s.",ex.toString(),ex.getMessage());
@@ -57,8 +57,8 @@ public void runMenu(String _menu, String[] _opcionesMenu) {
                         case "2":
                             try{
                                 control.exportarPeliculas();
-                                System.out.println("\n\tSe ha exportado peliculas.html a"
-                                        + " la carpeta Filmot18 del escritorio. ");
+                                System.out.println("\n\tSe ha creado \"peliculas.html\" en "
+                                        + "la carpeta Filmot18 del escritorio. ");
                             }catch (FileNotFoundException ex){
                                 err.printf("No fue posible crear el archivo, exception: %s , "
                                         + "mensaje: %s.",ex.toString(),ex.getMessage());
@@ -68,7 +68,7 @@ public void runMenu(String _menu, String[] _opcionesMenu) {
                             volver = this.preguntarSiSalirOrContinuar("¿Esta seguro de volver al Menú Principal?"); 
                             break;
                         default:
-                            err.println("\n\n ERROR: VIEW: runMenu(): (case:Opción Archivos): NO DEBERIA ESTAR AQUI \n\n");
+                            err.println("ERROR: VIEW: runMenu(): (case:Opción Archivos): NO DEBERIA ESTAR AQUI.");
                             break;    
                     }
                 }while(!volver);
@@ -86,7 +86,7 @@ public void runMenu(String _menu, String[] _opcionesMenu) {
                 String[] opcVal = {"1","2","3","q"};
                 String opc;
                 do{
-                opc = readString("MENÚ ARCHIVOS:\n"
+                opc = readString("\nMENÚ LISTADOS:\n"
                         + "1 -Listar películas\n"
                         + "2 -Listar directores\n"
                         + "3 -Listar actores\n"
@@ -105,7 +105,7 @@ public void runMenu(String _menu, String[] _opcionesMenu) {
                             volver = this.preguntarSiSalirOrContinuar("¿Esta seguro de volver al Menú Principal?"); 
                             break;
                         default:
-                            err.println("\n\n ERROR: VIEW: runMenu(): (case:Opción Listados): NO DEBERIA ESTAR AQUI \n\n");
+                            err.println("ERROR: VIEW: runMenu(): (case:Opción Listados): NO DEBERIA ESTAR AQUI.");
                             break;    
                     }
                 }while(!volver);
@@ -117,7 +117,7 @@ public void runMenu(String _menu, String[] _opcionesMenu) {
                 }
                 break;
             default:
-                err.println("\n\n ERROR: VIEW: runMenu(): default: NO DEBERIA ESTAR AQUI \n\n");
+                err.println("(Por si acaso ;) )ERROR: VIEW: runMenu(): default: NO DEBERIA ESTAR AQUI.");
                 break;
         }
     } while (!salir);   
@@ -164,7 +164,7 @@ private void opcionPeliculas() {
                 volver = this.preguntarSiSalirOrContinuar("¿Esta seguro de volver al Menú Principal?");
                 break;
             default:
-                err.println("\n\n ERROR: VIEW: peliculasOpcion(): No debería mostrar está línea. \n\n");
+                err.println("ERROR: VIEW: peliculasOpcion(): No debería mostrar está línea.");
                 break;
         }
 
@@ -183,13 +183,13 @@ private void peliculaAlta(String[] _campos) {
     // nuevo[i] esta inicializado a null como resultado de usar el constructor.
   */
     Arrays.fill(nuevo,""); //Asi nuevo[i] contiene una cadena vacia, así me aseguro.
-    System.out.println("Por favor rellene los siguientes campos:");
+    System.out.println("\nComplete los siguientes campos:");
     for(String s : _campos){
         if(s.startsWith("*")){  //este campo es una colección
             nuevo[index++]= this.leerColeccion(s.substring(1));
             /*follow= this.preguntarSiSalirOrContinuar("Continuar?");  //*/
         }else{ //para campos simples.
-            System.out.printf("%s: ",s);
+            System.out.printf("%s: ",s.toUpperCase());
             /*   String input = sc.nextLine();
             if(!input.isEmpty()){nuevo[index++]= input;}
             else{ nuevo[index++]= ""; } */  //<-- No hay necesidad, porque:
@@ -205,23 +205,23 @@ private void peliculaAlta(String[] _campos) {
         done = control.altaPelicula(nuevo);
     }catch (NumberFormatException e) {
         done = false;
-        err.println("Por favor asegurese de introducir correctamente los"
-                + "datos numéricos.\n Intentelo de nuevo.\n Excepcion : " + e.getMessage());
+        err.println("- Por favor asegurese de introducir correctamente los"
+                + "datos numéricos. Intentelo de nuevo. Excepcion : " + e.getMessage());
     }
     if (done) {
-        System.out.println("Se ha añadido \""+nuevo[0]+"\" a la colección");
+        System.out.println("* Se ha añadido \""+nuevo[0]+"\" a la colección");
     }else{
-        System.out.println("No se ha podido añadir \""+nuevo[0]+"\" a la colección");
+        System.out.println("- No se ha podido añadir \""+nuevo[0]+"\" a la colección");
     }
 }
 
 private String leerColeccion(String d) {
     StringBuilder coll = new StringBuilder();
     String c;
-    System.out.println("Por favor, introduzca un valor cada vez. "
-            + "Para terminar y continuar con el siguiente campo pulse \"intro\".");
+    System.out.println("INSTRUCCIONES:"
+                   + "\nIntroduzca un valor cada vez.Para pasar al siguiente campo pulse \"intro\".");
     do{
-        System.out.printf("%s: ",d);
+        System.out.printf("%s: ",d.toUpperCase());
         c = sc.nextLine();
         if (!c.isEmpty()) { //No agrega valores vacios en la colección.
             coll.append(c);
@@ -235,13 +235,13 @@ private String leerColeccion(String d) {
 }
 
 private void peliculaBaja() {  /*ok*/
-    out.print("Indique el nombre de la película que desea eliminar de la colección: ");
+    out.println("\nIndique el nombre de la película que desea eliminar de la colección: ");
     String titulo = sc.nextLine();
     if (control.verificarPeliculaEsta(titulo)){
         control.eliminarPeliculaDeLaColección(titulo);/*ok.*/
         System.out.println("* Se ha eliminado \""+titulo+"\" de la colección.");
     }else{
-        out.println("La película \""+titulo+"\" no está en la colección");
+        out.println("- La película \""+titulo+"\" no se encuentra en la colección");
     }
 }
 
@@ -250,31 +250,32 @@ private void peliculaModificar() {
     String[] camposModif = control.getCamposModificar(View.PELICULAS);
     String[] nuevoValor = new String[camposModif.length];
     Arrays.fill(nuevoValor, ""); //asegurarme así de que hay cadenas vacias en el array.
-    out.println("Por favor teclea el nombre de la película que desea modificar");
+    out.println("\nTeclee el nombre de la película que desea modificar: ");
     titulo = sc.nextLine();
-    out.println("Instrucciones:\nPara cada campo modificable, introduzca su valor."
-                            + "\n\t\tSi no desea modificarlo pulse \"intro\".");
+    out.println("\nINSTRUCCIONES:"
+              + "\nPara cada campo modificable, introduzca su valor."
+              + "\nSi no desea modificarlo pulse \"intro\".");
   /*  out.println("Los campos modificables son los siguientes: "); 
     for(String c:camposModif){
         out.printf("-%s\n",c);
     }*/
     if(!control.verificarPeliculaEsta(titulo)) {
-        out.println("\""+titulo+"\" no esta en la colección, si desea puede añadir "
-                + "está película a la colección.");
+        out.println("* \""+titulo+"\" no esta en la colección, si desea puede "
+                + "añadir está película a la colección.");
     }else{
-        out.println("Introduzca nuevos valores para:");
+        out.println("\nIntroduzca nuevos valores para:");
         int i=0;
         for(String c:camposModif){
-            out.printf("-%s: ",c);
+            out.printf("-%s: ",c.toUpperCase());
             nuevoValor[i++] = sc.nextLine();
         }
         try{
             control.modificarPelicula(titulo,camposModif,nuevoValor); 
-            System.out.println(" La pelicula \""+ titulo +"\" se ha actualizado");
+            System.out.println("* La pelicula \""+ titulo +"\" se ha actualizado");
         }catch(NumberFormatException e){
-            err.println("La película no se ha podido actualizar, Intentelo de nuevo y "
-                    + "asegurese de introducir en el formato correcto los datos.\n"
-                    + "error message: "+e.getMessage());
+            err.println("- La película no se ha podido actualizar, Intentelo de nuevo y "
+                    + "asegurese de introducir en el formato correcto los datos."
+                    + " MENSAJE DE ERROR: "+e.getMessage());
         }
     }
 }
@@ -283,7 +284,7 @@ private void consultar(String consulta) {
     String cad;
     switch (consulta){
         case View.PELICULAS: //pedir por teclado el título de la película
-            System.out.println("Por favor teclee el nombre de la pelicula");
+            System.out.println("\nTeclee el nombre de la pelicula a consultar: ");
             cad = sc.nextLine();
             //recuperar sus datos
             String[] pelicula;
@@ -292,7 +293,7 @@ private void consultar(String consulta) {
             if (pelicula[0]!=null){
                 this.showDatos(pelicula,control.getCAMPOS_PELICULA());
             }else{
-                System.out.println("La película no está en la colección.");
+                System.out.println("- La película no está en la colección.");
             }
                 break;
     /**/    case View.ACTORES: //pedir nombre por teclado   <-- HACER BIEN
@@ -300,17 +301,18 @@ private void consultar(String consulta) {
             //recupera de las películas : el titulo, año, duración, país y género
             //pasar esos 5 argumentos en un array a una función q lo muestre en
             //forma de tabla.
-            System.out.println("Por favor teclee el nombre del actor");
+            System.out.println("\nTeclee el nombre del actor a consultar:");
             cad = sc.nextLine();
             //recuperar sus datos
             String[][] listaPelis;
             listaPelis = control.getDatosPeliculaActor(cad);
             //Mostrar todos sus datos
-            System.out.println(cad + " ha participado en las siguientes películas: ");
-            System.out.println(listaPelis);
+            System.out.println("\nPeliculas de: "+ cad.toUpperCase());
+            //System.out.println(listaPelis);
+            this.showListadosEncolumnados(listaPelis);
             break;
         default:
-            System.out.println("Por si acaso ;):ERROR: VIEW: consultar();");
+            System.out.println("Por si acaso ;):ERROR: View: consultar();");
     }
 }
 //=====================================================================//
@@ -333,17 +335,18 @@ private void opcionDirectores() {
                 this.directorDarDeAltaNuevo(control.getCAMPOS_DIRECTOR());
                 break;
             case "2": //Borrar director
-                System.out.print("Nombre del Director que desea borrar de la colección:");
+                System.out.println("\nNombre del Director que desea borrar de la colección:");
                 String borrar = sc.nextLine();
                 String res = control.eliminarDirectorDeLaColeccion(borrar);
                 if (res.equals("true")) // se  ha borrado
-                    System.out.println("Se ha borrado "+ borrar+" de la colección.");
+                    System.out.println("* Se ha borrado \""+ borrar+"\" de la colección.");
                 else{ 
                     if (res.equals("false")){
-                        System.out.println("El director no se encuentra en la colección");
+                        System.out.println("- El director no se encuentra en la colección");
                     }else{
-                    System.out.println("El director \""+borrar+"\" no se puede borrar de la coleccion."
-                            + "\nAún tiene las siguientes peliculas dadas de alta:\n"+res+".");
+                    System.out.println("- El director \""+borrar+"\" no se puede borrar de la coleccion."
+                                   + "\n  Aún tiene las siguientes peliculas dadas de alta:"
+                                   + "\n {"+res+"}.");
                     }
                 }
                 break;
@@ -354,7 +357,7 @@ private void opcionDirectores() {
                 volver = this.preguntarSiSalirOrContinuar("¿Esta seguro de volver al Menú Principal?");
                 break;
             default:
-                err.println("\n\n ERROR \n\n");
+                err.println("ERROR: View: OpcionDirectores().");
                 break;
         }
 
@@ -367,19 +370,19 @@ private void directorDarDeAltaNuevo(String[] _campos){
     boolean done;
     nuevo = new String[_campos.length];
     Arrays.fill(nuevo,""); //Asi nuevo[i] contiene una cadena vacia, así me aseguro.
-    System.out.println("Por favor rellene los siguientes campos:");
+    System.out.println("\nIntroduzca valores para los siguientes campos:");
     for(String s : _campos){
         if(s.startsWith("*")){  //este campo es una colección
             nuevo[index++]= this.leerColeccion(s.substring(1));
         }else{ //para campos simples.
-            System.out.printf("%s: ",s);
+            System.out.printf("%s: ",s.toUpperCase());
             if (s.equalsIgnoreCase("fecha de nacimiento")){
                 System.out.println("");
-                System.out.print("Dia (con dos digitos):");
+                System.out.print("DIA (con dos digitos):");
                 String dia = sc.nextLine();
-                System.out.print("Mes (con dos digitos):");
+                System.out.print("MES (con dos digitos):");
                 String mes = sc.nextLine();
-                System.out.print("Año (con cuatro digitos):");
+                System.out.print("AÑO (con cuatro digitos):");
                 String year = sc.nextLine();
                 nuevo[index++] = year.concat("-".concat(mes.concat("-".concat(dia))));
             }else{
@@ -394,16 +397,22 @@ private void directorDarDeAltaNuevo(String[] _campos){
         }
     }
     try {
-        done = control.altaDirector(nuevo);
+        done = false;
+        if(!control.verificarDirectorEsta(nuevo[0])){
+            done = control.altaDirector(nuevo);}
+        else{    
+            System.out.println("* Ya existe \""+nuevo[0]+"\" en la colección de directores."
+                    + "\n* Utilice la opción Modificar datos.");
+        }
     }catch (NumberFormatException e) {
         done = false;
         err.println("Por favor asegurese de introducir correctamente los"
-                + "datos numéricos.\n Intentelo de nuevo.\n Excepcion : " + e.getMessage());
+                + "datos numéricos. Intentelo de nuevo. Excepcion : " + e.getMessage());
     }
     if (done) {
-        System.out.println("Se ha añadido \""+nuevo[0]+"\" a los directores");
+        System.out.println("* Se ha añadido \""+nuevo[0]+"\" a los directores.");
     }else{
-        System.out.println("No se ha podido añadir \""+nuevo[0]+"\" a los directores");
+        System.out.println("- No se ha podido añadir \""+nuevo[0]+"\" a los directores.");
     }
 }
 //=====================================================================//
@@ -431,13 +440,14 @@ private void opcionActores() {
                 String borrar = sc.nextLine();
                 String res = control.eliminarActorDeLaColeccion(borrar);
                 if (res.equals("true")) // se  ha borrado
-                    System.out.println("Se ha borrado "+ borrar+" de la colección.");
+                    System.out.println("* Se ha borrado \""+ borrar+"\" de la colección.");
                 else{ 
                     if (res.equals("false")){
-                        System.out.println("El actor no se encuentra en la colección.");
+                        System.out.println("- El actor no se encuentra en la colección.");
                     }else{
-                        System.out.println("El actor \""+borrar+"\" no se puede borrar de la coleccion."
-                            + "\n Aún tiene las siguientes peliculas dadas de alta:\n"+res+".");
+                        System.out.println("* El actor \""+borrar+"\" no se puede borrar de la coleccion."
+                            + "\n  Aún tiene las siguientes peliculas dadas de alta:"
+                            + "\n {"+res+"}.");
                     }
                 }
                 break;
@@ -451,7 +461,7 @@ private void opcionActores() {
                 volver = this.preguntarSiSalirOrContinuar("¿Esta seguro de volver al Menú Principal?");
                 break;
             default:
-                err.println("\n\n ERROR \n\n");
+                err.println("ERROR: View: opcionActores().");
                 break;
         }
 
@@ -464,12 +474,12 @@ private void opcionActores() {
     boolean done;
     nuevo = new String[_campos.length];
     Arrays.fill(nuevo,""); //Asi nuevo[i] contiene una cadena vacia, así me aseguro.
-    System.out.println("Por favor rellene los siguientes campos:");
+    System.out.println("\nIntroduzca valores para los siguientes campos:");
     for(String s : _campos){
         if(s.startsWith("*")){  //este campo es una colección
             nuevo[index++]= this.leerColeccion(s.substring(1));
         }else{ //para campos simples.
-            System.out.printf("%s: ",s);
+            System.out.printf("%s: ",s.toUpperCase());
             if (s.equalsIgnoreCase("fecha de nacimiento")){
                 System.out.println("");
                 System.out.print("Dia (con dos digitos):");
@@ -491,16 +501,22 @@ private void opcionActores() {
         }
     }
     try {
-        done = control.altaActor(nuevo);
+        done = false;
+        if(!control.verificarActorEsta(nuevo[0])){
+            done = control.altaActor(nuevo);
+        }else{    
+            System.out.println("* Ya existe \""+nuevo[0]+"\" en la colección de actores."
+                    + "\n* Utilice la opción Modificar datos.");
+        }
     }catch (NumberFormatException | DateTimeParseException e) {
         done = false;
         err.println("Por favor asegurese de introducir correctamente los"
-                + "datos numéricos.\n Intentelo de nuevo.\n Excepcion : " + e.getMessage());
+                + "datos numéricos.Intentelo de nuevo.Excepcion : " + e.getMessage());
     }
     if (done) {
-        System.out.println("Se ha añadido \""+nuevo[0]+"\" a los actores");
+        System.out.println("* Se ha añadido \""+nuevo[0]+"\" a los actores.");
     }else{
-        System.out.println("No se ha podido añadir \""+nuevo[0]+"\" a los actores");
+        System.out.println("- No se ha podido añadir \""+nuevo[0]+"\" a los actores.");
     }
  }
 //=====================================================================//
@@ -608,14 +624,14 @@ private void modificar(String _coleccion){
     String nombre;
     switch(_coleccion){
         case View.DIRECTORES:
-            out.println("Por favor teclea el nombre del director que desea modificar");
+            out.println("Introduzca el nombre del director que desea modificar: ");
             nombre = sc.nextLine();
             if(!control.verificarDirectorEsta(nombre)) {
                 out.println("\""+nombre+"\" no esta en la colección, si desea puede añadir "
                                                            + "este director a la colección.");
             }else{
-                out.println("INSTRUCCIONES:\nPara cada campo modificable, introduzca su valor."
-                                           + " Si no desea modificarlo pulse \"intro\".");
+                out.println("\nINSTRUCCIONES:\nPara cada campo modificable, introduzca su valor."
+                                         + " Si no desea modificarlo pulse \"intro\".");
                 String[] camposModif = control.getCamposModificar(View.DIRECTORES);
                 String[] nuevoValor = new String[camposModif.length];
                 Arrays.fill(nuevoValor, ""); //asegurarme así de que hay cadenas vacias en el array.
@@ -625,47 +641,47 @@ private void modificar(String _coleccion){
                     if(c.equalsIgnoreCase("fecha de nacimiento")){
                         System.out.println("formato para la fecha: año-mes-dia (con dos digitos para el mes y el dia)");
                     }
-                    out.printf("-%s: ",c);
+                    out.printf("-%s: ",c.toUpperCase());
                     nuevoValor[i++] = sc.nextLine();
                 }
                 try{
                     control.modificarDirector(nombre,camposModif,nuevoValor); 
-                    System.out.println("El director \""+ nombre +"\" se ha actualizado correctamente.");
+                    System.out.println("* El director \""+ nombre +"\" se ha actualizado correctamente.");
                 }catch(DateTimeParseException e){
-                    err.println("El director no se ha podido actualizar, Intentelo de nuevo y "
+                    err.println("- El director no se ha podido actualizar, Intentelo de nuevo y "
                             + "asegurese de introducir en el formato correcto los datos.\n"
                             + "error message: "+e.getMessage());
                 }
             }
             break;
         case View.ACTORES:
-            out.println("Por favor teclea el nombre del director que desea modificar");
+            out.println("Por favor teclea el nombre del actor que desea modificar");
             nombre = sc.nextLine();
             if(!control.verificarActorEsta(nombre)) {
                 out.println("\""+nombre+"\" no esta en la colección, si desea puede añadir "
                                                            + "este actor a la colección.");
             }else{
-                out.println("Instrucciones:\nPara cada campo modificable, introduzca su valor."
-                                           + "\n\t\t\tSi no desea modificarlo pulse \"intro\".");
+                out.println("\nINSTRUCCIONES:\nPara cada campo modificable, introduzca su valor."
+                                          + "Si no desea modificarlo pulse \"intro\".");
                 String[] camposModif = control.getCamposModificar(View.ACTORES);
                 String[] nuevoValor = new String[camposModif.length];
                 Arrays.fill(nuevoValor, ""); //asegurarme así de que hay cadenas vacias en el array.
-                out.println("Introduzca nuevos valores para:");
+                out.println("\nIntroduzca nuevos valores para:");
                 int i=0;
                 for(String c:camposModif){
                     if(c.equalsIgnoreCase("fecha de nacimiento")){
                         System.out.println("formato para la fecha: año-mes-dia (con dos digitos para el mes y el dia)");
                     }
-                    out.printf("-%s: ",c);
+                    out.printf("-%s: ",c.toUpperCase());
                     nuevoValor[i++] = sc.nextLine();
                 }
                 try{
-                    control.modificarActor(nombre,camposModif,nuevoValor); control.modificarDirector(nombre,camposModif,nuevoValor); 
-                    System.out.println("El cctor \""+ nombre +"\" se ha actualizado correctamente.");
+                    control.modificarActor(nombre,camposModif,nuevoValor); 
+                    System.out.println("* El actor \""+ nombre +"\" se ha actualizado correctamente.");
                 }catch(DateTimeParseException | NumberFormatException e){
-                    err.println("El director no se ha podido actualizar, Intentelo de nuevo y "
-                            + "asegurese de introducir en el formato correcto los datos.\n"
-                            + "error message: "+e.getMessage());
+                    err.println("- El director no se ha podido actualizar, Intentelo de nuevo y "
+                            + "asegurese de introducir en el formato correcto los datos."
+                            + "MENSAJE DE ERROR: "+e.getMessage());
                 }
             }
             break;
